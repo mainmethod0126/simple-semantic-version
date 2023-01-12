@@ -9,16 +9,32 @@
 plugins {
     // Apply the application plugin to add support for building a CLI application in Java.
     id 'application'
+    id 'com.gradle.plugin-publish' version "1.1.0"
 }
+
+// Configure the plugin portal URL
+// gradlePluginPortal {
+//     credentials {
+//         username = System.getProperty("gradle.plugin.portal.username")
+//         password = System.getProperty("gradle.plugin.portal.password")
+//     }
+// }
 
 repositories {
     // Use Maven Central for resolving dependencies.
     mavenCentral()
+    gradlePluginPortal()
+    google()
 }
+
 
 dependencies {
 
     implementation gradleApi()
+
+    // https://mvnrepository.com/artifact/org.json/json
+    implementation 'org.json:json:20220924'
+
 
 
     // Use JUnit Jupiter for testing.
