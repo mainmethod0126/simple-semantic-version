@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.CharBuffer;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Map;
@@ -14,10 +15,15 @@ import javax.inject.Inject;
 
 import org.gradle.api.DefaultTask;
 import org.gradle.api.Project;
+import org.gradle.api.Task;
 import org.gradle.api.tasks.Input;
 import org.gradle.api.tasks.TaskAction;
 import org.gradle.api.tasks.bundling.Jar;
+import org.gradle.internal.impldep.com.fasterxml.jackson.databind.ObjectMapper;
+import org.gradle.internal.impldep.com.google.gson.JsonObject;
+import org.gradle.internal.impldep.com.google.gson.stream.JsonReader;
 import org.json.JSONObject;
+import org.json.JSONTokener;
 
 public class BuildAndVersioning extends DefaultTask {
 
@@ -96,9 +102,10 @@ public class BuildAndVersioning extends DefaultTask {
             file = createFileDefaulVersionJson();
         }
 
-        FileReader fileReader = new FileReader(file);
-        JSONObject versionJson = new JSONObject(fileReader.read());
-        fileReader.close();
+        FileReader reader = new FileReader("version.json");
+        JSONObject versionJson = new JSONObject(new JSONTokener(reader));
+
+        reader.close();
 
         if (tempMajor.isEmpty()) {
             tempMajor = versionJson.getString("major");
@@ -119,12 +126,12 @@ public class BuildAndVersioning extends DefaultTask {
         }
 
         String delimiterIncludedprereleaseVersion = prereleaseVersion;
-        if (prereleaseVersion.isEmpty()) {
+        if (!prereleaseVersion.isEmpty()) {
             delimiterIncludedprereleaseVersion = "-" + prereleaseVersion;
         }
 
         String delimiterIncludedBuildMetadata = buildMetadata;
-        if (buildMetadata.isEmpty()) {
+        if (!buildMetadata.isEmpty()) {
             delimiterIncludedBuildMetadata = "+" + buildMetadata;
         }
 
@@ -138,7 +145,8 @@ public class BuildAndVersioning extends DefaultTask {
 
         project.file(buildDirPath).mkdir();
 
-        Jar jar = project.getTasks().create("jar", Jar.class);
+        Task task = project.getTasks().getByName("jar");
+        Jar jar = (Jar) task;
         jar.getDestinationDirectory().set(new File(buildDirPath));
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Map<String, String> attributes = Map.of("Application-Version", applicationVersion, "Build-Date",
