@@ -25,24 +25,29 @@ public class BuildAndVersioning extends DefaultTask {
     private Project project;
 
     @Input
-    String javav = "";
+    private String javav = "";
 
     @Input
-    String major = "";
+    private String major = "";
 
     @Input
-    String minor = "";
+    private String minor = "";
 
     @Input
-    String patch = "";
+    private String patch = "";
 
     @Input
-    String pr = "";
+    private String pr = "";
 
     @Input
-    String bm = "";
+    private String bm = "";
 
-    public File createDefaulVersionJson() {
+    /**
+     * default version 정보가 적혀있는 version.json 파일을 생성합니다.
+     * 
+     * @return
+     */
+    public File createFileDefaulVersionJson() {
 
         String defaultPath = "version.json";
 
@@ -69,22 +74,26 @@ public class BuildAndVersioning extends DefaultTask {
     }
 
     @TaskAction
-    void doExcute() throws IOException {
+    public void doExcute() throws IOException {
 
-        String sourceCompatibility = "$javav";
+        String sourceCompatibility = this.javav;
+
+        if (sourceCompatibility.isEmpty()) {
+            sourceCompatibility = System.getProperty("java.version");
+        }
 
         project.setProperty("sourceCompatibility", sourceCompatibility);
 
-        String tempMajor = "$major";
-        String tempMinor = "$minor";
-        String tempPatch = "$patch";
-        String prereleaseVersion = "$pr";
-        String buildMetadata = "$bm";
+        String tempMajor = this.major;
+        String tempMinor = this.minor;
+        String tempPatch = this.patch;
+        String prereleaseVersion = this.pr;
+        String buildMetadata = this.bm;
 
         File file = new File("version.json");
 
         if (!file.exists()) {
-            file = createDefaulVersionJson();
+            file = createFileDefaulVersionJson();
         }
 
         FileReader fileReader = new FileReader(file);
@@ -160,6 +169,16 @@ public class BuildAndVersioning extends DefaultTask {
 
     }
 
+    /**
+     * version.json 파일에 json 형식으로 version을 입력합니다.
+     * 
+     * @param major
+     * @param minor
+     * @param patch
+     * @param prereleaseVersion
+     * @param buildMetadata
+     * @throws FileNotFoundException
+     */
     void writeVersion(String major, String minor, String patch, String prereleaseVersion, String buildMetadata)
             throws FileNotFoundException {
 
@@ -195,16 +214,35 @@ public class BuildAndVersioning extends DefaultTask {
         }
     }
 
+    /**
+     * 버전 값을 1만큼 증가시킵니다.
+     * 
+     * @param prevVersion
+     * @return
+     */
     String versionIncreaser(String prevVersion) {
         Integer versionNumber = Integer.valueOf(prevVersion);
         versionNumber++;
         return intToString(versionNumber);
     }
 
+    /**
+     * 정수값을 문자열로 변환합니다.
+     * 
+     * @param number
+     * @return
+     */
     String intToString(Integer number) {
         return number + "";
     }
 
+    /**
+     * 사용자에게 버전 증가 여부를 입력받아 버전을 증가시키거나 그대로 유지합니다.
+     * 
+     * @param versionName
+     * @param oldVersion
+     * @return
+     */
     String inputVersionIncrement(String versionName, String oldVersion) {
         System.out
                 .println("Enter 'Y' if you want to increment the " + versionName + " version, otherwise press any key");
@@ -222,6 +260,62 @@ public class BuildAndVersioning extends DefaultTask {
         }
         sc.close();
         return nextVersion;
+    }
+
+    public Project getProject() {
+        return project;
+    }
+
+    public String getJavav() {
+        return javav;
+    }
+
+    public String getMajor() {
+        return major;
+    }
+
+    public String getMinor() {
+        return minor;
+    }
+
+    public String getPatch() {
+        return patch;
+    }
+
+    public String getPr() {
+        return pr;
+    }
+
+    public String getBm() {
+        return bm;
+    }
+
+    public void setProject(Project project) {
+        this.project = project;
+    }
+
+    public void setJavav(String javav) {
+        this.javav = javav;
+    }
+
+    public void setMajor(String major) {
+        this.major = major;
+    }
+
+    public void setMinor(String minor) {
+        this.minor = minor;
+    }
+
+    public void setPatch(String patch) {
+        this.patch = patch;
+    }
+
+    public void setPr(String pr) {
+        this.pr = pr;
+    }
+
+    public void setBm(String bm) {
+        this.bm = bm;
     }
 
 }
