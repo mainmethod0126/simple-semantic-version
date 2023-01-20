@@ -1,16 +1,9 @@
 package gradle.simple.versioning.task.version;
 
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.annotation.Nonnull;
-
-import org.gradle.internal.impldep.org.apache.commons.io.FileExistsException;
 import org.json.JSONObject;
-
-import gradle.simple.versioning.exception.UnwritableFileException;
 
 public class SemanticVersion {
 
@@ -40,23 +33,7 @@ public class SemanticVersion {
         return this.buildMetadata;
     }
 
-    public void saveToJsonFile(@Nonnull File file)
-            throws FileExistsException, FileNotFoundException, UnwritableFileException {
-
-        if (!file.exists()) {
-            throw new FileExistsException(file);
-        }
-
-        if (!file.isFile()) {
-            throw new FileNotFoundException(file.getAbsolutePath() + " is not File");
-        }
-
-        if (!file.canWrite()) {
-            throw new UnwritableFileException(file.getAbsolutePath() + " is unwritable file");
-        }
-    }
-
-    private JSONObject toJsonObject() {
+    public JSONObject toJsonObject() {
         int ma = this.major.get();
         int mi = this.minor.get();
         int pa = this.patch.get();
