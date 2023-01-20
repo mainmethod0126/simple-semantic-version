@@ -25,6 +25,11 @@ import org.gradle.internal.impldep.com.google.gson.stream.JsonReader;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
+import gradle.simple.versioning.task.version.Major;
+import gradle.simple.versioning.task.version.Minor;
+import gradle.simple.versioning.task.version.Patch;
+import gradle.simple.versioning.task.version.SemanticVersion;
+
 public class BuildAndVersioning extends DefaultTask {
 
     @Inject
@@ -79,22 +84,13 @@ public class BuildAndVersioning extends DefaultTask {
         return file;
     }
 
-    @TaskAction
-    public void doExcute() throws IOException {
+    public SemanticVersion readVersion(TaskParam taskParam) {
 
-        String sourceCompatibility = this.javav;
-
-        if (sourceCompatibility.isEmpty()) {
-            sourceCompatibility = System.getProperty("java.version");
-        }
-
-        project.setProperty("sourceCompatibility", sourceCompatibility);
-
-        String tempMajor = this.major;
-        String tempMinor = this.minor;
-        String tempPatch = this.patch;
-        String prereleaseVersion = this.pr;
-        String buildMetadata = this.bm;
+        Major major = new Major(0);
+        Minor minor = new Minor(0);
+        Patch patch = new Patch(1);
+        String prereleaseVersion = "";
+        String buildMetadata = "";
 
         File file = new File("version.json");
 
@@ -107,33 +103,48 @@ public class BuildAndVersioning extends DefaultTask {
 
         reader.close();
 
-        if (tempMajor.isEmpty()) {
-            tempMajor = versionJson.getString("major");
-        } else if (tempMajor.equalsIgnoreCase("++")) {
-            tempMajor = versionIncreaser(versionJson.getString("major") + "");
+        if (taskParam.getMajor().isEmpty()) {
+            taskParam.getMajor() = versionJson.getString("major");
+        } else if (taskParam.getMajor().equalsIgnoreCase("++")) {
+            taskParam.getMajor() = versionIncreaser(versionJson.getString("major") + "");
         }
 
-        if (tempMinor.isEmpty()) {
-            tempMinor = versionJson.getString("minor");
-        } else if (tempMinor.equalsIgnoreCase("++")) {
-            tempMinor = versionIncreaser(versionJson.getString("minor") + "");
+        if (taskParam.getMinor().isEmpty()) {
+            taskParam.getMinor() = versionJson.getString("minor");
+        } else if (taskParam.getMinor().equalsIgnoreCase("++")) {
+            taskParam.getMinor() = versionIncreaser(versionJson.getString("minor") + "");
         }
 
-        if (tempPatch.isEmpty()) {
-            tempPatch = versionJson.getString("patch");
-        } else if (tempPatch.equalsIgnoreCase("++")) {
-            tempPatch = versionIncreaser(versionJson.getString("patch") + "");
+        if (taskParam.getPatch().isEmpty()) {
+            taskParam.getPatch() = versionJson.getString("patch");
+        } else if (taskParam.getPatch().equalsIgnoreCase("++")) {
+            taskParam.getPatch() = versionIncreaser(versionJson.getString("patch") + "");
         }
 
         String delimiterIncludedprereleaseVersion = prereleaseVersion;
-        if (!prereleaseVersion.isEmpty()) {
+        if (!taskParam.getPrereleaseVersion().isEmpty()) {
             delimiterIncludedprereleaseVersion = "-" + prereleaseVersion;
         }
 
         String delimiterIncludedBuildMetadata = buildMetadata;
-        if (!buildMetadata.isEmpty()) {
+        if (!taskParam.getBuildMetadata().isEmpty()) {
             delimiterIncludedBuildMetadata = "+" + buildMetadata;
         }
+    }
+
+    @TaskAction
+    public void doExcute() throws IOException {
+
+        String sourceCompatibility = this.javav;
+
+        if (sourceCompatibility.isEmpty()) {
+            sourceCompatibility = System.getProperty("java.version");
+        }
+
+        project.setProperty("sourceCompatibility", sourceCompatibility);
+
+        SemanticVersion semanticVersion = readVersion(
+                new TaskParam(this.major, this.minor, this.patch, this.pr, this.bm));
 
         String applicationVersion = tempMajor + "." + tempMinor + "." + tempPatch + delimiterIncludedprereleaseVersion
                 + delimiterIncludedBuildMetadata;

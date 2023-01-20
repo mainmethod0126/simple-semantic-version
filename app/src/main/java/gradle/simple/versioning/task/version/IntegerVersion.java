@@ -41,12 +41,12 @@ public class IntegerVersion implements Increaseable, Decrementable {
         this.value -= amount;
     }
 
-    public int getValue() {
+    public int get() {
         return value;
     }
 
-    public void setValue(int value) {
-        this.value = value;
+    public int set(int amount) {
+        return value;
     }
 
 }
