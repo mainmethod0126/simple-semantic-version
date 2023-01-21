@@ -1,11 +1,14 @@
 package gradle.simple.versioning.task.version;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Path;
 
 import org.json.JSONObject;
+import org.json.JSONTokener;
 
 import gradle.simple.versioning.exception.MinimumLimitException;
 
@@ -14,18 +17,52 @@ public class SemanticVersionFile {
     private SemanticVersion semanticVersion;
     private File file;
 
-    public SemanticVersionFile(Path versionFilePath) {
-        this(new SemanticVersion(), versionFilePath);
-    }
-
-    public SemanticVersionFile(SemanticVersion semanticVersion, Path versionFilePath) {
-        this.semanticVersion = semanticVersion;
+    public SemanticVersionFile(Path versionFilePath) throws IOException {
         this.file = versionFilePath.toFile();
+
+        if (this.file.exists()) {
+
+            this.file.get
+
+
+
+
+
+            new SemanticVersion(null, null, null, null, null);
+
+
+        }
+
+        if (!this.file.createNewFile()) {
+            throw new IOException("failed create file : " + this.file.getPath());
+        }
     }
 
     private void save(JSONObject version) throws IOException {
         try (FileWriter fileWriter = new FileWriter(this.file);) {
             fileWriter.write(version.toString());
+        }
+    }
+
+    private void load() throws IOException {
+        try (FileReader reader = new FileReader("version.json");) {
+            JSONObject versionJson = new JSONObject(new JSONTokener(reader));
+        
+        
+        Major major = new Major();
+        Minor minor = new Minor();
+        Patch patch = new Patch();
+        String pr = "";
+        String bm = "";
+
+
+        if (versionJson.get("major") instanceof String) {
+            major.set(versionJson.get("major"));
+        }
+
+
+            Major major = 
+
         }
     }
 

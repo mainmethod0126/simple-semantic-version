@@ -1,13 +1,16 @@
 package gradle.simple.versioning.task;
 
 public class TaskParam {
+    String javaVersion;
     String major;
     String minor;
     String patch;
     String prereleaseVersion;
     String buildMetadata;
 
-    public TaskParam(String major, String minor, String patch, String prereleaseVersion, String buildMetadata) {
+    public TaskParam(String javaVersion, String major, String minor, String patch, String prereleaseVersion,
+            String buildMetadata) {
+        this.javaVersion = javaVersion;
         this.major = major;
         this.minor = minor;
         this.patch = patch;

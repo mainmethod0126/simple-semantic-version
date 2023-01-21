@@ -6,6 +6,8 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.CharBuffer;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Map;
@@ -25,10 +27,12 @@ import org.gradle.internal.impldep.com.google.gson.stream.JsonReader;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
+import gradle.simple.versioning.exception.MinimumLimitException;
 import gradle.simple.versioning.task.version.Major;
 import gradle.simple.versioning.task.version.Minor;
 import gradle.simple.versioning.task.version.Patch;
 import gradle.simple.versioning.task.version.SemanticVersion;
+import gradle.simple.versioning.task.version.SemanticVersionFile;
 
 public class BuildAndVersioning extends DefaultTask {
 
@@ -86,23 +90,6 @@ public class BuildAndVersioning extends DefaultTask {
 
     public SemanticVersion readVersion(TaskParam taskParam) {
 
-        Major major = new Major(0);
-        Minor minor = new Minor(0);
-        Patch patch = new Patch(1);
-        String prereleaseVersion = "";
-        String buildMetadata = "";
-
-        File file = new File("version.json");
-
-        if (!file.exists()) {
-            file = createFileDefaulVersionJson();
-        }
-
-        FileReader reader = new FileReader("version.json");
-        JSONObject versionJson = new JSONObject(new JSONTokener(reader));
-
-        reader.close();
-
         if (taskParam.getMajor().isEmpty()) {
             taskParam.getMajor() = versionJson.getString("major");
         } else if (taskParam.getMajor().equalsIgnoreCase("++")) {
@@ -120,6 +107,17 @@ public class BuildAndVersioning extends DefaultTask {
         } else if (taskParam.getPatch().equalsIgnoreCase("++")) {
             taskParam.getPatch() = versionIncreaser(versionJson.getString("patch") + "");
         }
+
+        Major major = new Major(taskParam.getMajor());
+        Minor minor = new Minor(taskParam.getMinor());
+        Patch patch = new Patch(taskParam.patch);
+        String prereleaseVersion = taskParam.getPrereleaseVersion();
+        String buildMetadata = taskParam.getBuildMetadata();
+
+        Path versionJsonFilePath = Paths.get("version.json");
+
+        SemanticVersionFile semanticVersionFile = new SemanticVersionFile(
+                new SemanticVersion(major, minor, patch, prereleaseVersion, buildMetadata), versionJsonFilePath);
 
         String delimiterIncludedprereleaseVersion = prereleaseVersion;
         if (!taskParam.getPrereleaseVersion().isEmpty()) {
@@ -140,6 +138,10 @@ public class BuildAndVersioning extends DefaultTask {
         if (sourceCompatibility.isEmpty()) {
             sourceCompatibility = System.getProperty("java.version");
         }
+
+        TaskParam userInputVersion = new TaskParam(this.javav, this.major, this.minor, this.patch, this.pr, this.bm);
+
+        readVersion(userInputVersion);
 
         project.setProperty("sourceCompatibility", sourceCompatibility);
 

@@ -13,6 +13,14 @@ public class SemanticVersion {
     private String prereleaseVersion;
     private String buildMetadata;
 
+    public SemanticVersion(Major major, Minor minor, Patch patch, String prereleaseVersion, String buildMetadata) {
+        this.major = major;
+        this.minor = minor;
+        this.patch = patch;
+        this.prereleaseVersion = prereleaseVersion;
+        this.buildMetadata = buildMetadata;
+    }
+
     public Major major() {
         return this.major;
     }
