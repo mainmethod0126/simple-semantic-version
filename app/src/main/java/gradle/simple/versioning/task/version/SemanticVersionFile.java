@@ -21,21 +21,16 @@ public class SemanticVersionFile {
         this.file = versionFilePath.toFile();
 
         if (this.file.exists()) {
-
-            this.file.get
-
-
-
-
-
-            new SemanticVersion(null, null, null, null, null);
-
-
+            load();
+            return;
         }
 
         if (!this.file.createNewFile()) {
             throw new IOException("failed create file : " + this.file.getPath());
         }
+
+        this.semanticVersion = new SemanticVersion(new Major(), new Minor(), new Patch(), "", "");
+        save(semanticVersion.toJsonObject());
     }
 
     private void save(JSONObject version) throws IOException {
@@ -47,22 +42,26 @@ public class SemanticVersionFile {
     private void load() throws IOException {
         try (FileReader reader = new FileReader("version.json");) {
             JSONObject versionJson = new JSONObject(new JSONTokener(reader));
-        
-        
-        Major major = new Major();
-        Minor minor = new Minor();
-        Patch patch = new Patch();
-        String pr = "";
-        String bm = "";
 
+            if (versionJson.get("major") instanceof String) {
+                this.semanticVersion.getMajor().set((String) versionJson.get("major"));
+            }
 
-        if (versionJson.get("major") instanceof String) {
-            major.set(versionJson.get("major"));
-        }
+            if (versionJson.get("minor") instanceof String) {
+                this.semanticVersion.getMinor().set((String) versionJson.get("minor"));
+            }
 
+            if (versionJson.get("patch") instanceof String) {
+                this.semanticVersion.getPatch().set((String) versionJson.get("patch"));
+            }
 
-            Major major = 
+            if (versionJson.get("prereleaseVersion") instanceof String) {
+                this.semanticVersion.setPrereleaseVersion((String) versionJson.get("prereleaseVersion"));
+            }
 
+            if (versionJson.get("buildMetadata") instanceof String) {
+                this.semanticVersion.setBuildMetadata((String) versionJson.get("buildMetadata"));
+            }
         }
     }
 

@@ -49,9 +49,8 @@ public class IntegerVersion implements Increaseable, Decrementable {
         this.value = value;
     }
 
-    public int set(String value) {
-
-        this.value = value;
+    public void set(String value) {
+        this.value = Integer.valueOf(value);
     }
 
 }
