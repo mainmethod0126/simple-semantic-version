@@ -2,6 +2,7 @@ package gradle.simple.versioning.task.version;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 import org.json.JSONObject;
 
@@ -39,6 +40,36 @@ public class SemanticVersion {
 
     public String buildMetadata() {
         return this.buildMetadata;
+    }
+
+    private String getBaseVersionString() {
+        String tempMajor = Optional.of(major.toString()).get();
+        String tempMinor = Optional.of(minor.toString()).get();
+        String tempPatch = Optional.of(patch.toString()).get();
+
+        return tempMajor + "." + tempMinor + "." + tempPatch;
+    }
+
+    private String getMetaDataVersion() {
+
+        String metaDataVersion = "";
+
+        if (prereleaseVersion != null && !prereleaseVersion.isEmpty()) {
+            metaDataVersion = "-" + prereleaseVersion;
+        }
+
+        if (buildMetadata != null && !buildMetadata.isEmpty()) {
+            metaDataVersion = "+" + buildMetadata;
+        }
+
+        return metaDataVersion;
+    }
+
+    public String getFullString() {
+        String baseVersion = getBaseVersionString();
+        String metaDataVersion = getMetaDataVersion();
+
+        return baseVersion + metaDataVersion;
     }
 
     public JSONObject toJsonObject() {

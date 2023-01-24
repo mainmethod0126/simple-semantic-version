@@ -1,7 +1,6 @@
 package gradle.simple.versioning.task.version;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -20,7 +19,12 @@ public class SemanticVersionFile {
     public SemanticVersionFile(Path versionFilePath) throws IOException {
         this.file = versionFilePath.toFile();
 
+        if (this.semanticVersion == null) {
+            this.semanticVersion = new SemanticVersion(new Major(), new Minor(), new Patch(), "", "");
+        }
+
         if (this.file.exists()) {
+
             load();
             return;
         }
@@ -29,7 +33,6 @@ public class SemanticVersionFile {
             throw new IOException("failed create file : " + this.file.getPath());
         }
 
-        this.semanticVersion = new SemanticVersion(new Major(), new Minor(), new Patch(), "", "");
         save(semanticVersion.toJsonObject());
     }
 
@@ -65,12 +68,21 @@ public class SemanticVersionFile {
         }
     }
 
+    public String getFullString() throws IOException {
+        load();
+        return semanticVersion.getFullString();
+    }
+
     public Increaser increase() {
         return new Increaser();
     }
 
     public Increaser increase(int amount) {
         return new Increaser(amount);
+    }
+
+    public TextVersionSetter set(String value) {
+        return new TextVersionSetter(value);
     }
 
     public class Increaser {
@@ -179,6 +191,43 @@ public class SemanticVersionFile {
                 e.printStackTrace();
             }
         }
+    }
+
+    public class TextVersionSetter {
+
+        private String value;
+
+        public TextVersionSetter(String value) {
+            this.value = value;
+        }
+
+        public void prereleaseVersion() {
+            semanticVersion.setPrereleaseVersion(this.value);
+        }
+
+        public void buildMetadata() {
+            semanticVersion.setBuildMetadata(this.value);
+        }
+    }
+
+    public int getMajor() {
+        return semanticVersion.getMajor().get();
+    }
+
+    public int getMinor() {
+        return semanticVersion.getMinor().get();
+    }
+
+    public int getPatch() {
+        return semanticVersion.getPatch().get();
+    }
+
+    public String getPrereleaseVersion() {
+        return semanticVersion.getPrereleaseVersion();
+    }
+
+    public String getBuildMetadata() {
+        return semanticVersion.getBuildMetadata();
     }
 
 }
