@@ -46,25 +46,15 @@ public class SemanticVersionFile {
         try (FileReader reader = new FileReader("version.json");) {
             JSONObject versionJson = new JSONObject(new JSONTokener(reader));
 
-            if (versionJson.get("major") instanceof String) {
-                this.semanticVersion.getMajor().set((String) versionJson.get("major"));
-            }
+            this.semanticVersion.getMajor().set(versionJson.get("major").toString());
 
-            if (versionJson.get("minor") instanceof String) {
-                this.semanticVersion.getMinor().set((String) versionJson.get("minor"));
-            }
+            this.semanticVersion.getMinor().set(versionJson.get("minor").toString());
 
-            if (versionJson.get("patch") instanceof String) {
-                this.semanticVersion.getPatch().set((String) versionJson.get("patch"));
-            }
+            this.semanticVersion.getPatch().set(versionJson.get("patch").toString());
 
-            if (versionJson.get("prereleaseVersion") instanceof String) {
-                this.semanticVersion.setPrereleaseVersion((String) versionJson.get("prereleaseVersion"));
-            }
+            this.semanticVersion.setPrereleaseVersion(versionJson.get("prereleaseVersion").toString());
 
-            if (versionJson.get("buildMetadata") instanceof String) {
-                this.semanticVersion.setBuildMetadata((String) versionJson.get("buildMetadata"));
-            }
+            this.semanticVersion.setBuildMetadata(versionJson.get("buildMetadata").toString());
         }
     }
 
