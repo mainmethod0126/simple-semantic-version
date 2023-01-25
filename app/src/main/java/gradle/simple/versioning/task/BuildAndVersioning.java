@@ -380,4 +380,8 @@ public class BuildAndVersioning extends DefaultTask {
         this.bm = bm;
     }
 
+    public void setSemanticVersionFile(SemanticVersionFile semanticVersionFile) {
+        this.semanticVersionFile = semanticVersionFile;
+    }
+
 }
