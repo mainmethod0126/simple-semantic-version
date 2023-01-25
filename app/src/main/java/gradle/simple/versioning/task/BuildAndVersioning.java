@@ -17,7 +17,6 @@ import org.gradle.api.Task;
 import org.gradle.api.tasks.Input;
 import org.gradle.api.tasks.TaskAction;
 import org.gradle.api.tasks.bundling.Jar;
-import org.gradle.internal.impldep.org.apache.commons.io.FileExistsException;
 import org.json.JSONObject;
 
 import gradle.simple.versioning.task.version.SemanticVersionFile;
@@ -80,7 +79,23 @@ public class BuildAndVersioning extends DefaultTask {
         return file;
     }
 
+    private void printVersionChangeInfo(String versionName, String prev, String next) {
+
+        String tempPrev = (prev.isEmpty()) ? "Empty" : prev;
+        String tempNext = (next.isEmpty()) ? "Empty" : next;
+
+        System.out.println(
+                versionName + " : " + tempPrev + " -> "
+                        + tempNext);
+    }
+
     public void taskParamResolve(final TaskParam taskParam) {
+
+        String prevMajor = String.valueOf(semanticVersionFile.getMajor());
+        String prevMinor = String.valueOf(semanticVersionFile.getMinor());
+        String prevPatch = String.valueOf(semanticVersionFile.getPatch());
+        String prevPr = semanticVersionFile.getPrereleaseVersion();
+        String prevBm = semanticVersionFile.getBuildMetadata();
 
         if (!taskParam.getMajor().isEmpty() && taskParam.getMajor().equalsIgnoreCase("++")) {
             semanticVersionFile.increase().major();
@@ -101,12 +116,24 @@ public class BuildAndVersioning extends DefaultTask {
         }
 
         if (!taskParam.getPrereleaseVersion().isEmpty()) {
-            semanticVersionFile.set("").prereleaseVersion();
+            semanticVersionFile.set(taskParam.getPrereleaseVersion()).prereleaseVersion();
         }
 
         if (!taskParam.getBuildMetadata().isEmpty()) {
-            semanticVersionFile.set("").buildMetadata();
+            semanticVersionFile.set(taskParam.getBuildMetadata()).buildMetadata();
         }
+
+        String nextMajor = String.valueOf(semanticVersionFile.getMajor());
+        String nextMinor = String.valueOf(semanticVersionFile.getMinor());
+        String nextPatch = String.valueOf(semanticVersionFile.getPatch());
+        String nextPr = semanticVersionFile.getPrereleaseVersion();
+        String nextBm = semanticVersionFile.getBuildMetadata();
+
+        printVersionChangeInfo("major", prevMajor, nextMajor);
+        printVersionChangeInfo("minor", prevMinor, nextMinor);
+        printVersionChangeInfo("patch", prevPatch, nextPatch);
+        printVersionChangeInfo("prereleaseVersion", prevPr, nextPr);
+        printVersionChangeInfo("buildMetadata", prevBm, nextBm);
     }
 
     private void init() throws IOException {
@@ -115,7 +142,7 @@ public class BuildAndVersioning extends DefaultTask {
         semanticVersionFile = new SemanticVersionFile(versionFilePath);
     }
 
-    private void createArtifacts(String sourceCompatibility, String applicationVersion) throws IOException {
+    private Artifact createArtifact(String sourceCompatibility, String applicationVersion) throws IOException {
 
         if (sourceCompatibility == null) {
             throw new NullPointerException("sourceCompatibility is null");
@@ -127,7 +154,7 @@ public class BuildAndVersioning extends DefaultTask {
 
         String buildDate = DateUtils.getCurrentDate(DateUtils.DateUnit.DAY);
 
-        Path buildDirPath = createBuildDirPath(Paths.get(System.getProperty("user.dir")).getParent()
+        Path buildDirPath = createBuildDirPath(project.getProjectDir()
                 .toString(), buildDate, sourceCompatibility,
                 applicationVersion);
 
@@ -137,14 +164,16 @@ public class BuildAndVersioning extends DefaultTask {
 
         setJar(buildDirPath.toAbsolutePath().toString(), applicationVersion, buildDate);
 
+        return new Artifact(buildDirPath, applicationVersion);
+
     }
 
-    private void createBuildDir(Path buildDirPath) throws FileExistsException {
+    private void createBuildDir(Path buildDirPath) throws FileNotFoundException {
 
         File buildDir = new File(buildDirPath.toAbsolutePath().toString());
 
         if (!buildDir.exists() && !buildDir.mkdirs()) {
-            throw new FileExistsException(buildDirPath + " Failed Create Build Directory");
+            throw new FileNotFoundException(buildDirPath + " Failed Create Build Directory");
         }
     }
 
@@ -172,6 +201,7 @@ public class BuildAndVersioning extends DefaultTask {
 
         // set default java version
         if (sourceCompatibility.isEmpty()) {
+
             sourceCompatibility = System.getProperty("java.version");
         }
 
@@ -182,7 +212,7 @@ public class BuildAndVersioning extends DefaultTask {
 
         String applicationVersion = semanticVersionFile.getFullString();
 
-        createArtifacts(sourceCompatibility, applicationVersion);
+        Artifact artifact = createArtifact(sourceCompatibility, applicationVersion);
 
         System.out.println(
                 "----------------------------------------------------------------------------------------------------");
@@ -194,7 +224,8 @@ public class BuildAndVersioning extends DefaultTask {
                 "--------------------------------|                                 |---------------------------------");
         System.out.println(
                 "----------------------------------------------------------------------------------------------------");
-        System.out.println("Build version : " + applicationVersion);
+        System.out.println("Build version : " + artifact.getVersion());
+        System.out.println("Build Artifact Path : " + artifact.getPath());
         System.out.println(
                 "----------------------------------------------------------------------------------------------------");
         System.out.println(

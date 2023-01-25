@@ -59,7 +59,7 @@ public class SemanticVersion {
         }
 
         if (buildMetadata != null && !buildMetadata.isEmpty()) {
-            metaDataVersion = "+" + buildMetadata;
+            metaDataVersion += "+" + buildMetadata;
         }
 
         return metaDataVersion;

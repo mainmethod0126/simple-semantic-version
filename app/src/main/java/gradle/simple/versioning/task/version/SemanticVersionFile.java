@@ -80,14 +80,14 @@ public class SemanticVersionFile {
         private int value;
 
         public Increaser() {
-            this.value = 0;
+            this.value = 1;
         }
 
         public Increaser(int value) {
             this.value = value;
         }
 
-        public void major() {
+        public int major() {
             semanticVersion.getMajor().increase(value);
 
             try {
@@ -96,9 +96,11 @@ public class SemanticVersionFile {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
             }
+
+            return semanticVersion.getMajor().get();
         }
 
-        public void minor() {
+        public int minor() {
             semanticVersion.getMinor().increase(value);
 
             try {
@@ -108,9 +110,10 @@ public class SemanticVersionFile {
                 e.printStackTrace();
             }
 
+            return semanticVersion.getMinor().get();
         }
 
-        public void patch() {
+        public int patch() {
             semanticVersion.getPatch().increase(value);
 
             try {
@@ -119,6 +122,8 @@ public class SemanticVersionFile {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
             }
+
+            return semanticVersion.getPatch().get();
         }
     }
 
@@ -193,10 +198,20 @@ public class SemanticVersionFile {
 
         public void prereleaseVersion() {
             semanticVersion.setPrereleaseVersion(this.value);
+            try {
+                save(semanticVersion.toJsonObject());
+            } catch (IOException e) {
+                throw new IllegalStateException(e);
+            }
         }
 
         public void buildMetadata() {
             semanticVersion.setBuildMetadata(this.value);
+            try {
+                save(semanticVersion.toJsonObject());
+            } catch (IOException e) {
+                throw new IllegalStateException(e);
+            }
         }
     }
 
