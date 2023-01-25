@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.net.URI;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Map;
@@ -128,25 +127,31 @@ public class BuildAndVersioning extends DefaultTask {
 
         String buildDate = DateUtils.getCurrentDate(DateUtils.DateUnit.DAY);
 
-        Path buildDirPath = createBuildDirPath(System.getProperty("user.dir"), buildDate, sourceCompatibility,
+        Path buildDirPath = createBuildDirPath(Paths.get(System.getProperty("user.dir")).getParent()
+                .toString(), buildDate, sourceCompatibility,
                 applicationVersion);
 
         project.setProperty("version", applicationVersion);
 
-        File buildDir = new File(buildDirPath.toAbsolutePath().toString());
-
-        if (!buildDir.mkdirs()) {
-            throw new FileExistsException(buildDirPath + " Failed Create Build Directory");
-        }
+        createBuildDir(buildDirPath);
 
         setJar(buildDirPath.toAbsolutePath().toString(), applicationVersion, buildDate);
 
     }
 
+    private void createBuildDir(Path buildDirPath) throws FileExistsException {
+
+        File buildDir = new File(buildDirPath.toAbsolutePath().toString());
+
+        if (!buildDir.exists() && !buildDir.mkdirs()) {
+            throw new FileExistsException(buildDirPath + " Failed Create Build Directory");
+        }
+    }
+
     private Path createBuildDirPath(String rootPath, String buildDate, String sourceCompatibility,
             String applicationVersion) {
 
-        return Paths.get(rootPath, buildDate, sourceCompatibility, applicationVersion);
+        return Paths.get(rootPath, "dist", buildDate, sourceCompatibility, applicationVersion);
     }
 
     private void setJar(String buildDirPath, String applicationVersion, String buildDate) {

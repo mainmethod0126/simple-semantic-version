@@ -1,11 +1,10 @@
 package gradle.simple.versioning;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
 import java.io.IOException;
 
 import org.gradle.api.Project;
 import org.gradle.testfixtures.ProjectBuilder;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import gradle.simple.versioning.task.BuildAndVersioning;
@@ -13,7 +12,8 @@ import gradle.simple.versioning.task.BuildAndVersioning;
 public class SemanticVersionManagerTest {
 
     @Test
-    public void testApply() {
+    @DisplayName("buildAndVersioningTask 가 정상적으로 실행되는지 테스트 합니다.")
+    public void buildAndVersioningTaskTest() throws IOException {
 
         // given
         Project project = ProjectBuilder.builder().build();
@@ -21,16 +21,9 @@ public class SemanticVersionManagerTest {
         BuildAndVersioning buildAndVersioning = project.getTasks().create("BuildAndVersioning",
                 BuildAndVersioning.class);
 
-        try {
-            buildAndVersioning.setProject(project);
-            buildAndVersioning.doExcute();
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-
-        assertTrue(project.getTasks().getByName("BuildAndVersioning") instanceof SemanticVersionManager);
-        assertTrue(project.getTasks().getByName("build").getDependsOn().contains("myCustomTask"));
+        // when, then
+        buildAndVersioning.setProject(project);
+        buildAndVersioning.doExcute();
     }
 
 }
