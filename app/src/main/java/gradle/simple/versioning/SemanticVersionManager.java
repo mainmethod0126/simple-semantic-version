@@ -2,7 +2,6 @@ package gradle.simple.versioning;
 
 import java.io.IOException;
 
-import org.gradle.BuildResult;
 import org.gradle.api.Plugin;
 import org.gradle.api.Project;
 
@@ -43,15 +42,35 @@ public class SemanticVersionManager implements Plugin<Project> {
                         throw new IllegalStateException(e);
                 }
 
-                project.getGradle().addListener(new Object() {
-                        void buildFinished(BuildResult result) {
-                                if (result.getFailure() == null) {
-                                        System.out.println("build success!!!");
-                                } else {
-                                        System.out.println("build fail!!!");
-                                }
+                project.getGradle().buildFinished(result -> {
+                        if (result.getFailure() == null) {
+                                System.out.println("build success!!!");
+                        } else {
+                                System.out.println("build fail!!!");
                         }
                 });
+
+                // project.getGradle().buildFinished(new Action<BuildResult>() {
+
+                // @Override
+                // public void execute(BuildResult result) {
+                // if (result.getFailure() == null) {
+                // System.out.println("build success!!!");
+                // } else {
+                // System.out.println("build fail!!!");
+                // }
+                // }
+                // });
+
+                // project.getGradle().addListener(new Object() {
+                // void buildFinished(BuildResult result) {
+                // if (result.getFailure() == null) {
+                // System.out.println("build success!!!");
+                // } else {
+                // System.out.println("build fail!!!");
+                // }
+                // }
+                // });
 
         }
 
