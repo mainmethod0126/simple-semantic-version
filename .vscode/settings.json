@@ -1,5 +1,5 @@
 {
     "java.configuration.updateBuildConfiguration": "automatic",
     "java.compile.nullAnalysis.mode": "automatic",
-    "java.dependency.syncWithFolderExplorer": false
+    "java.dependency.syncWithFolderExplorer": true
 }

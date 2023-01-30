@@ -2,11 +2,10 @@ package gradle.simple.versioning.task;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Map;
 import java.util.Scanner;
 
@@ -14,10 +13,15 @@ import javax.inject.Inject;
 
 import org.gradle.api.DefaultTask;
 import org.gradle.api.Project;
+import org.gradle.api.Task;
 import org.gradle.api.tasks.Input;
 import org.gradle.api.tasks.TaskAction;
 import org.gradle.api.tasks.bundling.Jar;
 import org.json.JSONObject;
+
+import gradle.simple.versioning.task.version.SemanticVersionFile;
+import gradle.simple.versioning.utils.DateUtils;
+import gradle.simple.versioning.utils.NumberUtils;
 
 public class BuildAndVersioning extends DefaultTask {
 
@@ -25,24 +29,31 @@ public class BuildAndVersioning extends DefaultTask {
     private Project project;
 
     @Input
-    String javav = "";
+    private String javav = "";
 
     @Input
-    String major = "";
+    private String major = "";
 
     @Input
-    String minor = "";
+    private String minor = "";
 
     @Input
-    String patch = "";
+    private String patch = "";
 
     @Input
-    String pr = "";
+    private String pr = "";
 
     @Input
-    String bm = "";
+    private String bm = "";
 
-    public File createDefaulVersionJson() {
+    private SemanticVersionFile semanticVersionFile;
+
+    /**
+     * default version 정보가 적혀있는 version.json 파일을 생성합니다.
+     * 
+     * @return
+     */
+    public File createFileDefaulVersionJson() {
 
         String defaultPath = "version.json";
 
@@ -51,7 +62,7 @@ public class BuildAndVersioning extends DefaultTask {
         JSONObject defaultVersionJson = new JSONObject();
         defaultVersionJson.put("major", "0");
         defaultVersionJson.put("minor", "0");
-        defaultVersionJson.put("patch", "0");
+        defaultVersionJson.put("patch", "1");
         defaultVersionJson.put("prereleaseVersion", "");
         defaultVersionJson.put("buildMetadata", "");
 
@@ -68,76 +79,140 @@ public class BuildAndVersioning extends DefaultTask {
         return file;
     }
 
-    @TaskAction
-    void doExcute() throws IOException {
+    private void printVersionChangeInfo(String versionName, String prev, String next) {
 
-        String sourceCompatibility = "$javav";
+        String tempPrev = (prev.isEmpty()) ? "Empty" : prev;
+        String tempNext = (next.isEmpty()) ? "Empty" : next;
 
-        project.setProperty("sourceCompatibility", sourceCompatibility);
+        System.out.println(
+                versionName + " : " + tempPrev + " -> "
+                        + tempNext);
+    }
 
-        String tempMajor = "$major";
-        String tempMinor = "$minor";
-        String tempPatch = "$patch";
-        String prereleaseVersion = "$pr";
-        String buildMetadata = "$bm";
+    public void taskParamResolve(final TaskParam taskParam) {
 
-        File file = new File("version.json");
+        String prevMajor = String.valueOf(semanticVersionFile.getMajor());
+        String prevMinor = String.valueOf(semanticVersionFile.getMinor());
+        String prevPatch = String.valueOf(semanticVersionFile.getPatch());
+        String prevPr = semanticVersionFile.getPrereleaseVersion();
+        String prevBm = semanticVersionFile.getBuildMetadata();
 
-        if (!file.exists()) {
-            file = createDefaulVersionJson();
+        if (!taskParam.getMajor().isEmpty() && taskParam.getMajor().equalsIgnoreCase("++")) {
+            semanticVersionFile.increase().major();
+        } else if (!taskParam.getMajor().isEmpty() && NumberUtils.isPositiveInteger(taskParam.getMajor())) {
+            semanticVersionFile.increase(Integer.valueOf(taskParam.getMajor())).major();
         }
 
-        FileReader fileReader = new FileReader(file);
-        JSONObject versionJson = new JSONObject(fileReader.read());
-        fileReader.close();
-
-        if (tempMajor.isEmpty()) {
-            tempMajor = versionJson.getString("major");
-        } else if (tempMajor.equalsIgnoreCase("++")) {
-            tempMajor = versionIncreaser(versionJson.getString("major") + "");
+        if (!taskParam.getMinor().isEmpty() && taskParam.getMinor().equalsIgnoreCase("++")) {
+            semanticVersionFile.increase().minor();
+        } else if (!taskParam.getMinor().isEmpty() && NumberUtils.isPositiveInteger(taskParam.getMinor())) {
+            semanticVersionFile.increase(Integer.valueOf(taskParam.getMinor())).minor();
         }
 
-        if (tempMinor.isEmpty()) {
-            tempMinor = versionJson.getString("minor");
-        } else if (tempMinor.equalsIgnoreCase("++")) {
-            tempMinor = versionIncreaser(versionJson.getString("minor") + "");
+        if (!taskParam.getPatch().isEmpty() && taskParam.getPatch().equalsIgnoreCase("++")) {
+            semanticVersionFile.increase().patch();
+        } else if (!taskParam.getPatch().isEmpty() && NumberUtils.isPositiveInteger(taskParam.getPatch())) {
+            semanticVersionFile.increase(Integer.valueOf(taskParam.getPatch())).patch();
         }
 
-        if (tempPatch.isEmpty()) {
-            tempPatch = versionJson.getString("patch");
-        } else if (tempPatch.equalsIgnoreCase("++")) {
-            tempPatch = versionIncreaser(versionJson.getString("patch") + "");
+        if (!taskParam.getPrereleaseVersion().isEmpty()) {
+            semanticVersionFile.set(taskParam.getPrereleaseVersion()).prereleaseVersion();
         }
 
-        String delimiterIncludedprereleaseVersion = prereleaseVersion;
-        if (prereleaseVersion.isEmpty()) {
-            delimiterIncludedprereleaseVersion = "-" + prereleaseVersion;
+        if (!taskParam.getBuildMetadata().isEmpty()) {
+            semanticVersionFile.set(taskParam.getBuildMetadata()).buildMetadata();
         }
 
-        String delimiterIncludedBuildMetadata = buildMetadata;
-        if (buildMetadata.isEmpty()) {
-            delimiterIncludedBuildMetadata = "+" + buildMetadata;
+        String nextMajor = String.valueOf(semanticVersionFile.getMajor());
+        String nextMinor = String.valueOf(semanticVersionFile.getMinor());
+        String nextPatch = String.valueOf(semanticVersionFile.getPatch());
+        String nextPr = semanticVersionFile.getPrereleaseVersion();
+        String nextBm = semanticVersionFile.getBuildMetadata();
+
+        printVersionChangeInfo("major", prevMajor, nextMajor);
+        printVersionChangeInfo("minor", prevMinor, nextMinor);
+        printVersionChangeInfo("patch", prevPatch, nextPatch);
+        printVersionChangeInfo("prereleaseVersion", prevPr, nextPr);
+        printVersionChangeInfo("buildMetadata", prevBm, nextBm);
+    }
+
+    private void init() throws IOException {
+
+        Path versionFilePath = Paths.get("version.json");
+        semanticVersionFile = new SemanticVersionFile(versionFilePath);
+    }
+
+    private Artifact createArtifact(String sourceCompatibility, String applicationVersion) throws IOException {
+
+        if (sourceCompatibility == null) {
+            throw new NullPointerException("sourceCompatibility is null");
         }
 
-        String applicationVersion = tempMajor + "." + tempMinor + "." + tempPatch + delimiterIncludedprereleaseVersion
-                + delimiterIncludedBuildMetadata;
+        if (applicationVersion == null) {
+            throw new NullPointerException("applicationVersion is null");
+        }
 
-        String buildDirPath = "./dist/${(new Date()).format('yyyy-MM-dd')}" + "/" + sourceCompatibility + "/"
-                + applicationVersion + "/";
+        String buildDate = DateUtils.getCurrentDate(DateUtils.DateUnit.DAY);
+
+        Path buildDirPath = createBuildDirPath(project.getProjectDir()
+                .toString(), buildDate, sourceCompatibility,
+                applicationVersion);
 
         project.setProperty("version", applicationVersion);
 
-        project.file(buildDirPath).mkdir();
+        createBuildDir(buildDirPath);
 
-        Jar jar = project.getTasks().create("jar", Jar.class);
+        setJar(buildDirPath.toAbsolutePath().toString(), applicationVersion, buildDate);
+
+        return new Artifact(buildDirPath, applicationVersion);
+
+    }
+
+    private void createBuildDir(Path buildDirPath) throws FileNotFoundException {
+
+        File buildDir = new File(buildDirPath.toAbsolutePath().toString());
+
+        if (!buildDir.exists() && !buildDir.mkdirs()) {
+            throw new FileNotFoundException(buildDirPath + " Failed Create Build Directory");
+        }
+    }
+
+    private Path createBuildDirPath(String rootPath, String buildDate, String sourceCompatibility,
+            String applicationVersion) {
+
+        return Paths.get(rootPath, "dist", buildDate, sourceCompatibility, applicationVersion);
+    }
+
+    private void setJar(String buildDirPath, String applicationVersion, String buildDate) {
+        Task task = project.getTasks().getByName("jar");
+        Jar jar = (Jar) task;
         jar.getDestinationDirectory().set(new File(buildDirPath));
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        Map<String, String> attributes = Map.of("Application-Version", applicationVersion, "Build-Date",
-                dateFormat.format(new Date()));
+        Map<String, String> attributes = Map.of("Application-Version", applicationVersion, "Build-Date", buildDate);
         jar.getManifest().attributes(attributes);
         this.dependsOn(jar);
+    }
 
-        writeVersion(tempMajor, tempMinor, tempPatch, prereleaseVersion, buildMetadata);
+    @TaskAction
+    public void doExcute() throws IOException {
+
+        init();
+
+        String sourceCompatibility = this.javav;
+
+        // set default java version
+        if (sourceCompatibility.isEmpty()) {
+
+            sourceCompatibility = System.getProperty("java.version");
+        }
+
+        project.setProperty("sourceCompatibility", sourceCompatibility);
+
+        TaskParam userInputVersion = new TaskParam(this.javav, this.major, this.minor, this.patch, this.pr, this.bm);
+        taskParamResolve(userInputVersion);
+
+        String applicationVersion = semanticVersionFile.getFullString();
+
+        Artifact artifact = createArtifact(sourceCompatibility, applicationVersion);
 
         System.out.println(
                 "----------------------------------------------------------------------------------------------------");
@@ -149,8 +224,8 @@ public class BuildAndVersioning extends DefaultTask {
                 "--------------------------------|                                 |---------------------------------");
         System.out.println(
                 "----------------------------------------------------------------------------------------------------");
-        System.out.println("Build version : " + applicationVersion);
-        System.out.println("Build result path : " + buildDirPath);
+        System.out.println("Build version : " + artifact.getVersion());
+        System.out.println("Build Artifact Path : " + artifact.getPath());
         System.out.println(
                 "----------------------------------------------------------------------------------------------------");
         System.out.println(
@@ -160,8 +235,18 @@ public class BuildAndVersioning extends DefaultTask {
 
     }
 
+    /**
+     * version.json 파일에 json 형식으로 version을 입력합니다.
+     * 
+     * @param major
+     * @param minor
+     * @param patch
+     * @param prereleaseVersion
+     * @param buildMetadata
+     * @throws IOException
+     */
     void writeVersion(String major, String minor, String patch, String prereleaseVersion, String buildMetadata)
-            throws FileNotFoundException {
+            throws IOException {
 
         String tempPrereleaseVersion = "\"\"";
         if (prereleaseVersion != null && !prereleaseVersion.isEmpty()) {
@@ -185,26 +270,41 @@ public class BuildAndVersioning extends DefaultTask {
         json.put("prereleaseVersion", "\"" + tempPrereleaseVersion + "\"");
         json.put("buildMetadata", "\"" + tempBuildMetadata + "\"");
 
-        try {
-            FileWriter fileWriter = new FileWriter(versionJosnFile);
+        try (FileWriter fileWriter = new FileWriter(versionJosnFile);) {
             fileWriter.write(json.toString());
             fileWriter.flush();
-            fileWriter.close();
-        } catch (IOException e) {
-            e.printStackTrace();
         }
     }
 
+    /**
+     * 버전 값을 1만큼 증가시킵니다.
+     * 
+     * @param prevVersion
+     * @return
+     */
     String versionIncreaser(String prevVersion) {
         Integer versionNumber = Integer.valueOf(prevVersion);
         versionNumber++;
         return intToString(versionNumber);
     }
 
+    /**
+     * 정수값을 문자열로 변환합니다.
+     * 
+     * @param number
+     * @return
+     */
     String intToString(Integer number) {
         return number + "";
     }
 
+    /**
+     * 사용자에게 버전 증가 여부를 입력받아 버전을 증가시키거나 그대로 유지합니다.
+     * 
+     * @param versionName
+     * @param oldVersion
+     * @return
+     */
     String inputVersionIncrement(String versionName, String oldVersion) {
         System.out
                 .println("Enter 'Y' if you want to increment the " + versionName + " version, otherwise press any key");
@@ -222,6 +322,66 @@ public class BuildAndVersioning extends DefaultTask {
         }
         sc.close();
         return nextVersion;
+    }
+
+    public Project getProject() {
+        return project;
+    }
+
+    public String getJavav() {
+        return javav;
+    }
+
+    public String getMajor() {
+        return major;
+    }
+
+    public String getMinor() {
+        return minor;
+    }
+
+    public String getPatch() {
+        return patch;
+    }
+
+    public String getPr() {
+        return pr;
+    }
+
+    public String getBm() {
+        return bm;
+    }
+
+    public void setProject(Project project) {
+        this.project = project;
+    }
+
+    public void setJavav(String javav) {
+        this.javav = javav;
+    }
+
+    public void setMajor(String major) {
+        this.major = major;
+    }
+
+    public void setMinor(String minor) {
+        this.minor = minor;
+    }
+
+    public void setPatch(String patch) {
+        this.patch = patch;
+    }
+
+    public void setPr(String pr) {
+        this.pr = pr;
+    }
+
+    public void setBm(String bm) {
+        this.bm = bm;
+    }
+
+    public void setSemanticVersionFile(SemanticVersionFile semanticVersionFile) {
+        this.semanticVersionFile = semanticVersionFile;
     }
 
 }
