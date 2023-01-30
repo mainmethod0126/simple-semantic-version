@@ -43,7 +43,7 @@ compileJava {
 gradlePlugin {
     plugins {
         simplePlugin {
-            id = 'org.mainmethod0126.simple-semantic-version'
+            id = 'kr.co.softcamp.simple-semantic-version'
             implementationClass = 'gradle.simple.versioning.SemanticVersionManager'
         }
     }
