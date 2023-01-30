@@ -12,6 +12,31 @@ plugins {
     id 'com.gradle.plugin-publish' version "1.1.0"
 }
 
+<<<<<<< HEAD
+=======
+sourceCompatibility = 11
+targetCompatibility = 11
+
+tasks.withType(Javadoc) {
+    options.encoding = 'UTF-8'
+}
+
+
+compileJava {
+    options.encoding = 'UTF-8'
+}
+
+gradlePlugin {
+    plugins {
+        simplePlugin {
+            id = 'org.mainmethod0126.simple-semantic-version'
+            implementationClass = 'gradle.simple.versioning.SemanticVersionManager'
+        }
+    }
+}
+
+
+>>>>>>> 9336fe4 (0.1.0 배포를 위한 커밋 정리)
 // Configure the plugin portal URL
 // gradlePluginPortal {
 //     credentials {
