@@ -68,17 +68,9 @@ repositories {
 
 shadowJar {
     baseName = "gradle-semantic-versioning-manager-plugin"
-    version = "1.0"
+    version = "0.1.0"
     classifier = null
 }
-
-// jar {
-//     archiveBaseName = "gradle-semantic-versioning-manager-plugin"
-//     // from("$rootProject.projectDir/gradle-plugins") {
-//     //     into "META-INF/gradle-plugins"
-//     // }
-// }
-
 
 tasks.withType(Test).configureEach {
     it.jvmArgs = ["--add-opens=java.base/java.lang=ALL-UNNAMED"]

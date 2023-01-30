@@ -42,13 +42,13 @@ public class SemanticVersionManager implements Plugin<Project> {
                         throw new IllegalStateException(e);
                 }
 
-                project.getGradle().buildFinished(result -> {
-                        if (result.getFailure() == null) {
-                                System.out.println("build success!!!");
-                        } else {
-                                System.out.println("build fail!!!");
-                        }
-                });
+                // project.getGradle().buildFinished(result -> {
+                // if (result.getFailure() == null) {
+                // System.out.println("build success!!!");
+                // } else {
+                // System.out.println("build fail!!!");
+                // }
+                // });
 
                 // project.getGradle().buildFinished(new Action<BuildResult>() {
 
