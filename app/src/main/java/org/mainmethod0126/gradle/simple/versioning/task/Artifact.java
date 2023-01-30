@@ -1,4 +1,4 @@
-package gradle.simple.versioning.task;
+package org.mainmethod0126.gradle.simple.versioning.task;
 
 import java.nio.file.Path;
 

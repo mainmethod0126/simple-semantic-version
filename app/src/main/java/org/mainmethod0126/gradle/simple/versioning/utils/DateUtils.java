@@ -1,4 +1,4 @@
-package gradle.simple.versioning.utils;
+package org.mainmethod0126.gradle.simple.versioning.utils;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;

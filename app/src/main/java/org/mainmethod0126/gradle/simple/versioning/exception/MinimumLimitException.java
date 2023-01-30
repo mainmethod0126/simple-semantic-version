@@ -1,4 +1,4 @@
-package gradle.simple.versioning.exception;
+package org.mainmethod0126.gradle.simple.versioning.exception;
 
 public class MinimumLimitException extends Exception {
 

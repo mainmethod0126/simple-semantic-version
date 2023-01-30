@@ -1,4 +1,4 @@
-package gradle.simple.versioning.task.version;
+package org.mainmethod0126.gradle.simple.versioning.task.version;
 
 import java.util.HashMap;
 import java.util.Map;

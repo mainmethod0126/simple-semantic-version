@@ -1,4 +1,4 @@
-package gradle.simple.versioning.task.version;
+package org.mainmethod0126.gradle.simple.versioning.task.version;
 
 import java.io.File;
 import java.io.FileReader;
@@ -8,8 +8,7 @@ import java.nio.file.Path;
 
 import org.json.JSONObject;
 import org.json.JSONTokener;
-
-import gradle.simple.versioning.exception.MinimumLimitException;
+import org.mainmethod0126.gradle.simple.versioning.exception.MinimumLimitException;
 
 public class SemanticVersionFile {
 

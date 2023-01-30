@@ -25,9 +25,13 @@ plugins {
 
 
 
+
+
 apply plugin: 'com.github.johnrengelman.shadow'
 
 
+group = 'org.mainmethod0126'
+version = "0.1.0"
 sourceCompatibility = 11
 targetCompatibility = 11
 
@@ -41,22 +45,20 @@ compileJava {
 }
 
 gradlePlugin {
+    website = 'https://github.com/mainmethod0126/simple-semantic-version'
+    vcsUrl = 'https://github.com/mainmethod0126/simple-semantic-version'
+    version = version
     plugins {
-        simplePlugin {
-            id = 'kr.co.softcamp.simple-semantic-version'
-            implementationClass = 'gradle.simple.versioning.SemanticVersionManager'
+        greetingsPlugin {
+            id = 'org.mainmethod0126.simple-semantic-version'
+            displayName = 'This is a plug-in for convenient semantic versioning' 
+            description = 'This is a plug-in for convenient semantic versioning'
+            tags.set(['java', 'versioning', 'semantic', 'plugins'])
+            implementationClass = 'org.mainmethod0126.gradle.simple.versioning.SemanticVersionManager'
         }
     }
 }
 
-
-// Configure the plugin portal URL
-// gradlePluginPortal {
-//     credentials {
-//         username = System.getProperty("gradle.plugin.portal.username")
-//         password = System.getProperty("gradle.plugin.portal.password")
-//     }
-// }
 
 repositories {
     // Use Maven Central for resolving dependencies.
@@ -68,7 +70,7 @@ repositories {
 
 shadowJar {
     baseName = "gradle-semantic-versioning-manager-plugin"
-    version = "0.1.0"
+    version = version
     classifier = null
 }
 
@@ -94,7 +96,7 @@ dependencies {
 
 application {
     // Define the main class for the application.
-    mainClass = 'gradle.simple.versioning.App'
+    mainClass = 'org.mainmethod0126.gradle.simple.versioning.App'
 }
 
 tasks.named('test') {

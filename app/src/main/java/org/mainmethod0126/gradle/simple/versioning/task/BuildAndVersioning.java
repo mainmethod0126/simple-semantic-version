@@ -1,4 +1,4 @@
-package gradle.simple.versioning.task;
+package org.mainmethod0126.gradle.simple.versioning.task;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -18,10 +18,9 @@ import org.gradle.api.tasks.Input;
 import org.gradle.api.tasks.TaskAction;
 import org.gradle.api.tasks.bundling.Jar;
 import org.json.JSONObject;
-
-import gradle.simple.versioning.task.version.SemanticVersionFile;
-import gradle.simple.versioning.utils.DateUtils;
-import gradle.simple.versioning.utils.NumberUtils;
+import org.mainmethod0126.gradle.simple.versioning.task.version.SemanticVersionFile;
+import org.mainmethod0126.gradle.simple.versioning.utils.DateUtils;
+import org.mainmethod0126.gradle.simple.versioning.utils.NumberUtils;
 
 public class BuildAndVersioning extends DefaultTask {
 

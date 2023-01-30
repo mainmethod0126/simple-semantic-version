@@ -1,6 +1,6 @@
-package gradle.simple.versioning.task.version;
+package org.mainmethod0126.gradle.simple.versioning.task.version;
 
-import gradle.simple.versioning.exception.MinimumLimitException;
+import org.mainmethod0126.gradle.simple.versioning.exception.MinimumLimitException;
 
 public class IntegerVersion implements Increaseable, Decrementable {
 

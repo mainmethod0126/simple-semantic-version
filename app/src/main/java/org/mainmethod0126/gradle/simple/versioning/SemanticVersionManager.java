@@ -1,11 +1,10 @@
-package gradle.simple.versioning;
+package org.mainmethod0126.gradle.simple.versioning;
 
 import java.io.IOException;
 
 import org.gradle.api.Plugin;
 import org.gradle.api.Project;
-
-import gradle.simple.versioning.task.BuildAndVersioning;
+import org.mainmethod0126.gradle.simple.versioning.task.BuildAndVersioning;
 
 public class SemanticVersionManager implements Plugin<Project> {
 

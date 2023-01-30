@@ -1,4 +1,4 @@
-package gradle.simple.versioning.task.version;
+package org.mainmethod0126.gradle.simple.versioning.task.version;
 
 public class Patch extends IntegerVersion {
 
