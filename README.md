@@ -26,7 +26,27 @@ plugins {
 apply plugin: 'io.github.mainmethod0126.simple-semantic-version'
 ```
 ### from Gradle Plugin Portal
-Currently, it cannot be used because it is not registered in the Gradle Plugin Portal. We will update the document after registration as soon as possible.
+
+https://plugins.gradle.org/plugin/io.github.mainmethod0126.simple-semantic-version
+
+#### Using legacy plugin application:
+```gradle
+buildscript {
+  repositories {
+    maven {
+      url "https://plugins.gradle.org/m2/"
+    }
+  }
+  dependencies {
+    classpath "io.github.mainmethod0126:app:0.1.0"
+  }
+}
+
+apply plugin: "io.github.mainmethod0126.simple-semantic-version"
+```
+
+#### Using the plugins DSL: 
+**Currently, the "Use Plugin DSL" method is not available. We will try to solve the problem as soon as possible.**
 
 
 ## Example
