@@ -30,7 +30,7 @@ plugins {
 apply plugin: 'com.github.johnrengelman.shadow'
 
 
-group = 'org.mainmethod0126'
+group = 'io.github.mainmethod0126'
 version = "0.1.0"
 sourceCompatibility = 11
 targetCompatibility = 11
@@ -50,11 +50,11 @@ gradlePlugin {
     version = version
     plugins {
         greetingsPlugin {
-            id = 'org.mainmethod0126.simple-semantic-version'
+            id = 'io.github.mainmethod0126.simple-semantic-version'
             displayName = 'This is a plug-in for convenient semantic versioning' 
             description = 'This is a plug-in for convenient semantic versioning'
             tags.set(['java', 'versioning', 'semantic', 'plugins'])
-            implementationClass = 'org.mainmethod0126.gradle.simple.versioning.SemanticVersionManager'
+            implementationClass = 'io.github.mainmethod0126.gradle.simple.versioning.SemanticVersionManager'
         }
     }
 }
@@ -62,7 +62,7 @@ gradlePlugin {
 
 repositories {
     // Use Maven Central for resolving dependencies.
-    mavenCentral()
+    mavenCentral()  
     gradlePluginPortal()
     google()
 }
@@ -96,7 +96,7 @@ dependencies {
 
 application {
     // Define the main class for the application.
-    mainClass = 'org.mainmethod0126.gradle.simple.versioning.App'
+    mainClass = 'io.github.mainmethod0126.gradle.simple.versioning.App'
 }
 
 tasks.named('test') {

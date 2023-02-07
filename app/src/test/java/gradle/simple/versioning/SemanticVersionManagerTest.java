@@ -7,7 +7,7 @@ import org.gradle.api.Project;
 import org.gradle.testfixtures.ProjectBuilder;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mainmethod0126.gradle.simple.versioning.task.BuildAndVersioning;
+import io.github.mainmethod0126.gradle.simple.versioning.task.BuildAndVersioning;
 
 public class SemanticVersionManagerTest {
 
