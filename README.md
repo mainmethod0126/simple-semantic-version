@@ -80,35 +80,26 @@ gradlew build -Pbm=test
 
 #### Java Version
 ```bash
-gradlew build -Pjavav=11
+gradlew build -Pjavav=17
 ```
 
 
 #### Compositive
 ```bash
-gradlew build -Pmajor=1 -Pminor=2 -Ppatch=3 -Ppr=test -Pbm=test
+gradlew build -Pmajor=1 -Pminor=2 -Ppatch=3 -Ppr=test -Pbm=test -Pjavav=17
 ```
 
 ## Build Artifacts Sample
-
-build option
-```bash
-gradlew build -Pmajor=1 -Pminor=2 -Ppatch=3 -Ppr=test -Pbm=test
-```
-### Final path and directory
-```bash
-/dist/<YYYY-MM-DD>/<java version>/<version>/app-1.2.3-beta+test.jar
-```
-#### Directory : dist
+### Directory : dist
 A folder called "dist" is automatically created in the application root path, and Build Artifacts are located under the "dist" folder. (If it already exists, the creation process is skipped)
 
-#### Directory : YYYY-MM-DD
+### Directory : YYYY-MM-DD
 The year, month, and day information of the build is created as a directory. (ex: 2023-02-07)
 
-#### Directory : java version
+### Directory : java version
 During gradle build, the java version entered through -Pjavav is created as a directory. (When the javav option is omitted, the build java version is used by default)
 
-#### Directory : version
+### Directory : version
 The directory is created with the final version information generated during Gradle build. (ex : app-1.2.3-beta-test)
 
 
