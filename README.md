@@ -6,6 +6,21 @@ This is a gradle plugin that helps you easily do semantic versioning of java pro
 
 ## from Local File
 
+#### build.gradle
+```gradle
+buildscript {
+    dependencies {
+        classpath files('libs/gradle-semantic-versioning-manager-plugin-0.1.0.jar')
+    }
+}
+
+plugins {
+  // ~~~
+}
+
+apply plugin: 'io.github.mainmethod0126.simple-semantic-version'
+```
+
 
 
 ## from Gradle Plugin Portal
