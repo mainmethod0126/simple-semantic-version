@@ -90,6 +90,10 @@ gradlew build -Pmajor=1 -Pminor=2 -Ppatch=3 -Ppr=test -Pbm=test -Pjavav=17
 ```
 
 ## Build Artifacts Sample
+```bash
+<application root>/dist/<YYYY-MM-DD>/<java version>/<version>/app-1.2.3-beta-test.jar
+```
+
 ### Directory : dist
 A folder called "dist" is automatically created in the application root path, and Build Artifacts are located under the "dist" folder. (If it already exists, the creation process is skipped)
 
