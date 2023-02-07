@@ -234,4 +234,54 @@ public class SemanticVersionFile {
         return semanticVersion.getBuildMetadata();
     }
 
+    public void setMajor(int version) {
+        semanticVersion.getMajor().set(version);
+        try {
+            save(semanticVersion.toJsonObject());
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
+
+    public void setMinor(int version) {
+        semanticVersion.getMinor().set(version);
+        try {
+            save(semanticVersion.toJsonObject());
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
+
+    public void setPatch(int version) {
+        semanticVersion.getPatch().set(version);
+        try {
+            save(semanticVersion.toJsonObject());
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
+
+    public void setPrereleaseVersion(String version) {
+        semanticVersion.setPrereleaseVersion(version);
+        try {
+            save(semanticVersion.toJsonObject());
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
+
+    public void setBuildMetadata(String version) {
+        semanticVersion.setBuildMetadata(version);
+        try {
+            save(semanticVersion.toJsonObject());
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
+
 }

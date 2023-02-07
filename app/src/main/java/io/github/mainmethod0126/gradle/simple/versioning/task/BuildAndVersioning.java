@@ -99,19 +99,20 @@ public class BuildAndVersioning extends DefaultTask {
         if (!taskParam.getMajor().isEmpty() && taskParam.getMajor().equalsIgnoreCase("++")) {
             semanticVersionFile.increase().major();
         } else if (!taskParam.getMajor().isEmpty() && NumberUtils.isPositiveInteger(taskParam.getMajor())) {
-            semanticVersionFile.increase(Integer.valueOf(taskParam.getMajor())).major();
+
+            semanticVersionFile.setMajor(Integer.valueOf(taskParam.getMajor()));
         }
 
         if (!taskParam.getMinor().isEmpty() && taskParam.getMinor().equalsIgnoreCase("++")) {
             semanticVersionFile.increase().minor();
         } else if (!taskParam.getMinor().isEmpty() && NumberUtils.isPositiveInteger(taskParam.getMinor())) {
-            semanticVersionFile.increase(Integer.valueOf(taskParam.getMinor())).minor();
+            semanticVersionFile.setMinor(Integer.valueOf(taskParam.getMinor()));
         }
 
         if (!taskParam.getPatch().isEmpty() && taskParam.getPatch().equalsIgnoreCase("++")) {
             semanticVersionFile.increase().patch();
         } else if (!taskParam.getPatch().isEmpty() && NumberUtils.isPositiveInteger(taskParam.getPatch())) {
-            semanticVersionFile.increase(Integer.valueOf(taskParam.getPatch())).patch();
+            semanticVersionFile.setPatch(Integer.valueOf(taskParam.getPatch()));
         }
 
         if (!taskParam.getPrereleaseVersion().isEmpty()) {
