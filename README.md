@@ -93,6 +93,9 @@ gradlew build -Pmajor=1 -Pminor=2 -Ppatch=3 -Ppr=test -Pbm=test -Pjavav=17
 ```bash
 <application root>/dist/<YYYY-MM-DD>/<java version>/<version>/app-1.2.3-beta-test.jar
 ```
+![gradle-build-sample](https://user-images.githubusercontent.com/40654598/217150085-e10d11ff-e9c4-45a2-ad3e-ba9d1746c93f.PNG)
+![gradle-build-sample2](https://user-images.githubusercontent.com/40654598/217150322-fdf25a72-c884-4bdc-b61b-c0ed2e961c5d.PNG)
+
 
 ### Directory : dist
 A folder called "dist" is automatically created in the application root path, and Build Artifacts are located under the "dist" folder. (If it already exists, the creation process is skipped)
@@ -106,20 +109,3 @@ During gradle build, the java version entered through -Pjavav is created as a di
 ### Directory : version
 The directory is created with the final version information generated during Gradle build. (ex : app-1.2.3-beta-test)
 
-
----
-
-# Build and Test
-
-TODO: Describe and show how to build your code and run the tests. 
-
----
-
-# Contribute
-
-TODO: Explain how other users and developers can contribute to make your code better. 
-
-If you want to learn more about creating good readme files then refer the following [guidelines](https://docs.microsoft.com/en-us/azure/devops/repos/git/create-a-readme?view=azure-devops). You can also seek inspiration from the below readme files:
-- [ASP.NET Core](https://github.com/aspnet/Home)
-- [Visual Studio Code](https://github.com/Microsoft/vscode)
-- [Chakra Core](https://github.com/Microsoft/ChakraCore)
