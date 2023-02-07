@@ -80,7 +80,7 @@ gradlew build -Pbm=test
 
 #### Java Version
 ```bash
-gradlew build -Pbm=test
+gradlew build -Pjavav=11
 ```
 
 
