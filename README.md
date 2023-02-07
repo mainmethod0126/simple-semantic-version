@@ -89,9 +89,15 @@ gradlew build -Pjavav=17
 gradlew build -Pmajor=1 -Pminor=2 -Ppatch=3 -Ppr=test -Pbm=test -Pjavav=17
 ```
 
+---
+
 ## Build Artifacts Sample
+
 ```bash
-<application root>/dist/<YYYY-MM-DD>/<java version>/<version>/app-1.2.3-beta-test.jar
+gradlew build -Pmajor=1 -Pminor=2 -Ppatch=3 -Ppr=test -Pbm=test -Pjavav=17
+```
+```bash
+<application root>/dist/<YYYY-MM-DD>/<java version>/<version>/app-<major.minor.patch>-<prereleaseVersion>-<buildMetadata>.jar
 ```
 ![gradle-build-sample](https://user-images.githubusercontent.com/40654598/217150085-e10d11ff-e9c4-45a2-ad3e-ba9d1746c93f.PNG)
 ![gradle-build-sample2](https://user-images.githubusercontent.com/40654598/217150322-fdf25a72-c884-4bdc-b61b-c0ed2e961c5d.PNG)
