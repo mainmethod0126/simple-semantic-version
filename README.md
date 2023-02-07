@@ -1,4 +1,7 @@
 # simple-semantic-version
+![GitHub](https://img.shields.io/github/license/mainmethod0126/simple-semantic-version?style=plastic)
+
+
 
 This is a gradle plugin that helps you easily do semantic versioning of java projects using gradle.
 
