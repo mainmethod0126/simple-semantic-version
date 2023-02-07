@@ -30,50 +30,50 @@ Currently, it cannot be used because it is not registered in the Gradle Plugin P
 
 ### Version Increment
 
-#### Major version
+#### Major
 ```bash
 gradlew build -Pmajor=++
 ```
 
-#### Minor version
+#### Minor
 ```bash
 gradlew build -Pminor=++
 ```
 
-#### Patch version
+#### Patch
 ```bash
 gradlew build -Ppatch=++
 ```
 
-#### PrereleaseVersion(pr) version
+#### Prerelease(pr)
 PrereleaseVersion Since version is in text format, incremental method is not supported.
 
-#### BuildMetadata(bm) version
+#### BuildMetadata(bm)
 BuildMetadataVersion Since version is in text format, incremental method is not supported.
 
 ### Version Change
 
-#### Major version
+#### Major
 ```bash
 gradlew build -Pmajor=1
 ```
 
-#### Minor version
+#### Minor
 ```bash
 gradlew build -Pminor=2
 ```
 
-#### Patch version
+#### Patch
 ```bash
 gradlew build -Ppatch=3
 ```
 
-#### PrereleaseVersion(pr) version
+#### Prerelease(pr)
 ```bash
 gradlew build -Ppr=beta
 ```
 
-#### BuildMetadata(bm) version
+#### BuildMetadata(bm)
 ```bash
 gradlew build -Pbm=test
 ```
