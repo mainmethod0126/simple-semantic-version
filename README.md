@@ -46,7 +46,7 @@ apply plugin: "io.github.mainmethod0126.simple-semantic-version"
 ```
 
 #### Using the plugins DSL: 
-**Currently, the "Use Plugin DSL" method is not available. We will try to solve the problem as soon as possible.**
+**Currently, the "Using the plugins DSL" method is not available. We will try to solve the problem as soon as possible.**
 
 
 ## Example
