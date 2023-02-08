@@ -109,7 +109,7 @@ gradlew build -Pjavav=17
 
 #### Compositive
 ```bash
-gradlew build -Pmajor=1 -Pminor=2 -Ppatch=3 -Ppr=test -Pbm=test -Pjavav=17
+gradlew build -Pmajor=1 -Pminor=2 -Ppatch=3 -Ppr=beta -Pbm=test -Pjavav=17
 ```
 
 ---
@@ -117,7 +117,7 @@ gradlew build -Pmajor=1 -Pminor=2 -Ppatch=3 -Ppr=test -Pbm=test -Pjavav=17
 ## Build Artifacts Sample
 
 ```bash
-gradlew build -Pmajor=1 -Pminor=2 -Ppatch=3 -Ppr=test -Pbm=test -Pjavav=17
+gradlew build -Pmajor=1 -Pminor=2 -Ppatch=3 -Ppr=beta -Pbm=test -Pjavav=17
 ```
 ```bash
 <application root>/dist/<YYYY-MM-DD>/<java version>/<version>/app-<major.minor.patch>-<prereleaseVersion>-<buildMetadata>.jar
