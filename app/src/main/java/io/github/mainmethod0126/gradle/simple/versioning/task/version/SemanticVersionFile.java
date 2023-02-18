@@ -121,7 +121,6 @@ public class SemanticVersionFile {
             try {
                 semanticVersion.getMajor().decrease(value);
             } catch (MinimumLimitException e) {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
             }
 
@@ -131,7 +130,6 @@ public class SemanticVersionFile {
             try {
                 semanticVersion.getMinor().decrease(value);
             } catch (MinimumLimitException e) {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
             }
 
@@ -141,7 +139,6 @@ public class SemanticVersionFile {
             try {
                 semanticVersion.getPatch().decrease(value);
             } catch (MinimumLimitException e) {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
             }
 
@@ -221,7 +218,6 @@ public class SemanticVersionFile {
             save(semanticVersion.toJsonObject());
             this.committedSemanticVersion = this.semanticVersion;
         } catch (IOException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
     }

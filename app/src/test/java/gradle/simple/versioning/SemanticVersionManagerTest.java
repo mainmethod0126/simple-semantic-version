@@ -45,6 +45,9 @@ public class SemanticVersionManagerTest {
         // when, then
         buildAndVersioning.setProject(project);
         buildAndVersioning.doExcute();
+
+        buildAndVersioning.commit();
+
     }
 
 }
