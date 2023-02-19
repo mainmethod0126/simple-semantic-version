@@ -78,7 +78,6 @@ public class BuildAndVersioning extends DefaultTask {
         return file;
     }
 
-
     private void printVersionChangeInfo(String versionName, String prev, String next) {
 
         String tempPrev = (prev.isEmpty()) ? "Empty" : prev;
@@ -387,6 +386,10 @@ public class BuildAndVersioning extends DefaultTask {
 
     public void commit() {
         this.semanticVersionFile.commit();
+    }
+
+    public boolean isChanged() {
+        return this.semanticVersionFile.isChanged();
     }
 
 }

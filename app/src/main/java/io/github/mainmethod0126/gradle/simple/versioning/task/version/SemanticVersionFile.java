@@ -8,6 +8,7 @@ import java.nio.file.Path;
 
 import org.json.JSONObject;
 import org.json.JSONTokener;
+
 import io.github.mainmethod0126.gradle.simple.versioning.exception.MinimumLimitException;
 
 public class SemanticVersionFile {
@@ -59,7 +60,6 @@ public class SemanticVersionFile {
     }
 
     public String getFullString() throws IOException {
-        load();
         return semanticVersion.getFullString();
     }
 
@@ -220,6 +220,10 @@ public class SemanticVersionFile {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public boolean isChanged() {
+        return semanticVersion.equals(committedSemanticVersion);
     }
 
 }

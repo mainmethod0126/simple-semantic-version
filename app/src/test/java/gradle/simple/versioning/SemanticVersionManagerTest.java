@@ -9,6 +9,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import io.github.mainmethod0126.gradle.simple.versioning.task.BuildAndVersioning;
 
+
 public class SemanticVersionManagerTest {
 
     @Test
@@ -47,7 +48,32 @@ public class SemanticVersionManagerTest {
         buildAndVersioning.doExcute();
 
         buildAndVersioning.commit();
-
     }
+
+    // @Test
+    // @DisplayName("When I didn't call commit in buildAndVersioningTask , the version file doesn't change.")
+    // public void buildAndVersioningTask_increase_not_commit_Test() throws IOException {
+
+    //     // given
+    //     Project project = ProjectBuilder.builder().build();
+    //     project.getPlugins().apply("java");
+    //     BuildAndVersioning buildAndVersioning = project.getTasks().create("BuildAndVersioning",
+    //             BuildAndVersioning.class);
+
+    //     buildAndVersioning.setMajor("++");
+    //     buildAndVersioning.setMinor("++");
+    //     buildAndVersioning.setPatch("++");
+    //     buildAndVersioning.setPr("beta" + UUID.randomUUID().toString());
+    //     buildAndVersioning.setBm("test" + UUID.randomUUID().toString());
+
+    //     // when
+    //     buildAndVersioning.setProject(project);
+
+    //     buildAndVersioning.doExcute();
+
+    //     // then
+    //     buildAndVersioning.commit();
+
+    // }
 
 }
