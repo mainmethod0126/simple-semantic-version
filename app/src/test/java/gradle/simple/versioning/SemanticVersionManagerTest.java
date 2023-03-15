@@ -1,5 +1,6 @@
 package gradle.simple.versioning;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.IOException;
@@ -44,11 +45,13 @@ public class SemanticVersionManagerTest {
         buildAndVersioning.setPr("beta" + UUID.randomUUID().toString());
         buildAndVersioning.setBm("test" + UUID.randomUUID().toString());
 
-        // when, then
+        // when 
         buildAndVersioning.setProject(project);
         buildAndVersioning.doExcute();
-
         buildAndVersioning.commit();
+
+        // then
+        assertTrue(buildAndVersioning.isChanged());
     }
 
     @Test
@@ -70,10 +73,9 @@ public class SemanticVersionManagerTest {
         // when
         buildAndVersioning.setProject(project);
         buildAndVersioning.doExcute();
-        buildAndVersioning.commit();
 
         // then
-        assertTrue(buildAndVersioning.isChanged());
+        assertFalse(buildAndVersioning.isChanged());
     }
 
 }
