@@ -8,7 +8,7 @@
 name: Gradle Package
 
 on:
-  pull_request:
+  push:
     branches:
       - main
 
