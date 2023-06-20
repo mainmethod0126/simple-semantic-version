@@ -8,9 +8,6 @@
 name: Build Verification
 
 on:
-  push:
-    branches:
-      - '*'
   pull_request:
     branches: 
       - '*'
