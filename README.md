@@ -1,5 +1,5 @@
 # simple-semantic-version
-![GitHub](https://img.shields.io/github/license/mainmethod0126/simple-semantic-version?style=plastic)
+![GitHub](https://img.shields.io/github/license/mainmethod0126/simple-semantic-version?style=plastic) [![Build Verification](https://github.com/mainmethod0126/simple-semantic-version/actions/workflows/build-verification.yml/badge.svg)](https://github.com/mainmethod0126/simple-semantic-version/actions/workflows/build-verification.yml) [![Gradle Package](https://github.com/mainmethod0126/simple-semantic-version/actions/workflows/gradle-publish.yml/badge.svg)](https://github.com/mainmethod0126/simple-semantic-version/actions/workflows/gradle-publish.yml)
 
 
 
