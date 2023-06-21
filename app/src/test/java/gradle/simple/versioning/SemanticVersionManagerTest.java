@@ -1,5 +1,6 @@
 package gradle.simple.versioning;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.IOException;
@@ -29,8 +30,8 @@ public class SemanticVersionManagerTest {
     }
 
     @Test
-    @DisplayName("buildAndVersioningTask 가 정상적으로 실행되는지 테스트 합니다.")
-    public void buildAndVersioningTask_increaseTest() throws IOException {
+    @DisplayName("If the build succeeds, the incremented version is committed.")
+    public void buildAndVersioningTask_whenBuildSucceed_thenIncreaseCommitTest() throws IOException {
 
         // given
         Project project = ProjectBuilder.builder().build();
@@ -49,11 +50,13 @@ public class SemanticVersionManagerTest {
         buildAndVersioning.doExcute();
 
         buildAndVersioning.commit();
+
+        assertTrue(buildAndVersioning.isChanged());
     }
 
     @Test
-    @DisplayName("When I didn't call commit in buildAndVersioningTask , the version file doesn't change.")
-    public void buildAndVersioningTask_increase_not_commit_Test() throws IOException {
+    @DisplayName("If the build fails, the incremented version is not committed.")
+    public void buildAndVersioningTask_whenBuildFailed_thenNotIncresaseCommitTest() throws IOException {
 
         // given
         Project project = ProjectBuilder.builder().build();
@@ -70,10 +73,9 @@ public class SemanticVersionManagerTest {
         // when
         buildAndVersioning.setProject(project);
         buildAndVersioning.doExcute();
-        buildAndVersioning.commit();
 
         // then
-        assertTrue(buildAndVersioning.isChanged());
+        assertFalse(buildAndVersioning.isChanged());
     }
 
 }
