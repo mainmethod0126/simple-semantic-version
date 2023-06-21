@@ -45,10 +45,9 @@ public class SemanticVersionManagerTest {
         buildAndVersioning.setPr("beta" + UUID.randomUUID().toString());
         buildAndVersioning.setBm("test" + UUID.randomUUID().toString());
 
-        // when, then
+        // when 
         buildAndVersioning.setProject(project);
         buildAndVersioning.doExcute();
-
         buildAndVersioning.commit();
 
         assertTrue(buildAndVersioning.isChanged());
