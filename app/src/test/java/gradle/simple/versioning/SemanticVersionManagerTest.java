@@ -50,7 +50,7 @@ public class SemanticVersionManagerTest {
         buildAndVersioning.doExcute();
         buildAndVersioning.commit();
 
-        assertTrue(buildAndVersioning.isChanged());
+        assertTrue(buildAndVersioning.changed());
     }
 
     @Test
@@ -74,7 +74,7 @@ public class SemanticVersionManagerTest {
         buildAndVersioning.doExcute();
 
         // then
-        assertFalse(buildAndVersioning.isChanged());
+        assertFalse(buildAndVersioning.changed());
     }
 
 }

@@ -222,7 +222,7 @@ public class SemanticVersionFile {
         }
     }
 
-    public boolean isChanged() {
+    public boolean changed() {
         return semanticVersion.equals(committedSemanticVersion);
     }
 

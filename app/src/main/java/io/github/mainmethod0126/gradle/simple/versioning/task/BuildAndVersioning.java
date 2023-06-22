@@ -388,8 +388,8 @@ public class BuildAndVersioning extends DefaultTask {
         this.semanticVersionFile.commit();
     }
 
-    public boolean isChanged() {
-        return this.semanticVersionFile.isChanged();
+    public boolean changed() {
+        return this.semanticVersionFile.changed();
     }
 
 }
