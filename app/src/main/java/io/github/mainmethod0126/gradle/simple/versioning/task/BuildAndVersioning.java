@@ -384,4 +384,12 @@ public class BuildAndVersioning extends DefaultTask {
         this.semanticVersionFile = semanticVersionFile;
     }
 
+    public void commit() {
+        this.semanticVersionFile.commit();
+    }
+
+    public boolean changed() {
+        return this.semanticVersionFile.changed();
+    }
+
 }

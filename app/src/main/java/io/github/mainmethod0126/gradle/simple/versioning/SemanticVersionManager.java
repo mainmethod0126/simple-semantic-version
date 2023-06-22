@@ -2,8 +2,13 @@ package io.github.mainmethod0126.gradle.simple.versioning;
 
 import java.io.IOException;
 
+import org.gradle.BuildListener;
+import org.gradle.BuildResult;
 import org.gradle.api.Plugin;
 import org.gradle.api.Project;
+import org.gradle.api.initialization.Settings;
+import org.gradle.api.invocation.Gradle;
+
 import io.github.mainmethod0126.gradle.simple.versioning.task.BuildAndVersioning;
 
 public class SemanticVersionManager implements Plugin<Project> {
@@ -41,35 +46,35 @@ public class SemanticVersionManager implements Plugin<Project> {
                         throw new IllegalStateException(e);
                 }
 
-                // project.getGradle().buildFinished(result -> {
-                // if (result.getFailure() == null) {
-                // System.out.println("build success!!!");
-                // } else {
-                // System.out.println("build fail!!!");
-                // }
-                // });
+                project.getGradle().addBuildListener(new BuildListener() {
 
-                // project.getGradle().buildFinished(new Action<BuildResult>() {
+                        @Override
+                        public void buildFinished(BuildResult buildResult) {
+                                if (buildResult.getFailure() == null) {
 
-                // @Override
-                // public void execute(BuildResult result) {
-                // if (result.getFailure() == null) {
-                // System.out.println("build success!!!");
-                // } else {
-                // System.out.println("build fail!!!");
-                // }
-                // }
-                // });
+                                        System.out.println("------------build Succeed------------");
 
-                // project.getGradle().addListener(new Object() {
-                // void buildFinished(BuildResult result) {
-                // if (result.getFailure() == null) {
-                // System.out.println("build success!!!");
-                // } else {
-                // System.out.println("build fail!!!");
-                // }
-                // }
-                // });
+                                        buildAndVersioning.commit();
+                                }
+
+                        }
+
+                        @Override
+                        public void projectsEvaluated(Gradle buildResult) {
+
+                        }
+
+                        @Override
+                        public void projectsLoaded(Gradle buildResult) {
+
+                        }
+
+                        @Override
+                        public void settingsEvaluated(Settings buildResult) {
+
+                        }
+
+                });
 
         }
 

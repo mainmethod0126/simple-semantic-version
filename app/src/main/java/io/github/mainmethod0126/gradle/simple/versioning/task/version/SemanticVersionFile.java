@@ -8,10 +8,12 @@ import java.nio.file.Path;
 
 import org.json.JSONObject;
 import org.json.JSONTokener;
+
 import io.github.mainmethod0126.gradle.simple.versioning.exception.MinimumLimitException;
 
 public class SemanticVersionFile {
 
+    private SemanticVersion committedSemanticVersion;
     private SemanticVersion semanticVersion;
     private File file;
 
@@ -32,7 +34,7 @@ public class SemanticVersionFile {
             throw new IOException("failed create file : " + this.file.getPath());
         }
 
-        save(semanticVersion.toJsonObject());
+        commit();
     }
 
     private void save(JSONObject version) throws IOException {
@@ -58,7 +60,6 @@ public class SemanticVersionFile {
     }
 
     public String getFullString() throws IOException {
-        load();
         return semanticVersion.getFullString();
     }
 
@@ -89,38 +90,17 @@ public class SemanticVersionFile {
         public int major() {
             semanticVersion.getMajor().increase(value);
 
-            try {
-                save(semanticVersion.toJsonObject());
-            } catch (IOException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
-
             return semanticVersion.getMajor().get();
         }
 
         public int minor() {
             semanticVersion.getMinor().increase(value);
 
-            try {
-                save(semanticVersion.toJsonObject());
-            } catch (IOException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
-
             return semanticVersion.getMinor().get();
         }
 
         public int patch() {
             semanticVersion.getPatch().increase(value);
-
-            try {
-                save(semanticVersion.toJsonObject());
-            } catch (IOException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
 
             return semanticVersion.getPatch().get();
         }
@@ -141,30 +121,15 @@ public class SemanticVersionFile {
             try {
                 semanticVersion.getMajor().decrease(value);
             } catch (MinimumLimitException e) {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
             }
 
-            try {
-                save(semanticVersion.toJsonObject());
-            } catch (IOException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
         }
 
         public void minor() {
             try {
                 semanticVersion.getMinor().decrease(value);
             } catch (MinimumLimitException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
-
-            try {
-                save(semanticVersion.toJsonObject());
-            } catch (IOException e) {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
             }
 
@@ -174,16 +139,9 @@ public class SemanticVersionFile {
             try {
                 semanticVersion.getPatch().decrease(value);
             } catch (MinimumLimitException e) {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
             }
 
-            try {
-                save(semanticVersion.toJsonObject());
-            } catch (IOException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
         }
     }
 
@@ -197,20 +155,12 @@ public class SemanticVersionFile {
 
         public void prereleaseVersion() {
             semanticVersion.setPrereleaseVersion(this.value);
-            try {
-                save(semanticVersion.toJsonObject());
-            } catch (IOException e) {
-                throw new IllegalStateException(e);
-            }
+
         }
 
         public void buildMetadata() {
             semanticVersion.setBuildMetadata(this.value);
-            try {
-                save(semanticVersion.toJsonObject());
-            } catch (IOException e) {
-                throw new IllegalStateException(e);
-            }
+
         }
     }
 
@@ -236,52 +186,44 @@ public class SemanticVersionFile {
 
     public void setMajor(int version) {
         semanticVersion.getMajor().set(version);
-        try {
-            save(semanticVersion.toJsonObject());
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
+
     }
 
     public void setMinor(int version) {
         semanticVersion.getMinor().set(version);
-        try {
-            save(semanticVersion.toJsonObject());
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
+
     }
 
     public void setPatch(int version) {
         semanticVersion.getPatch().set(version);
-        try {
-            save(semanticVersion.toJsonObject());
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
+
     }
 
     public void setPrereleaseVersion(String version) {
         semanticVersion.setPrereleaseVersion(version);
-        try {
-            save(semanticVersion.toJsonObject());
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
+
     }
 
     public void setBuildMetadata(String version) {
         semanticVersion.setBuildMetadata(version);
+
+    }
+
+    public void rollback() {
+        this.semanticVersion = this.committedSemanticVersion;
+    }
+
+    public void commit() {
         try {
             save(semanticVersion.toJsonObject());
+            this.committedSemanticVersion = this.semanticVersion;
         } catch (IOException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
+    }
+
+    public boolean changed() {
+        return semanticVersion.equals(committedSemanticVersion);
     }
 
 }

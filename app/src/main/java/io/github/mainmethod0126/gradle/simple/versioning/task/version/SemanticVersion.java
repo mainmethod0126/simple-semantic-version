@@ -2,6 +2,7 @@ package io.github.mainmethod0126.gradle.simple.versioning.task.version;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 
 import org.json.JSONObject;
@@ -129,4 +130,24 @@ public class SemanticVersion {
         this.buildMetadata = buildMetadata;
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        SemanticVersion that = (SemanticVersion) obj;
+        return Objects.equals(major, that.major) &&
+               Objects.equals(minor, that.minor) &&
+               Objects.equals(patch, that.patch) &&
+               Objects.equals(prereleaseVersion, that.prereleaseVersion) &&
+               Objects.equals(buildMetadata, that.buildMetadata);
+    }
+    
+    @Override
+    public int hashCode() {
+        return Objects.hash(major, minor, patch, prereleaseVersion, buildMetadata);
+    }
 }
