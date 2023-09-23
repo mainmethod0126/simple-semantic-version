@@ -5,6 +5,12 @@
 
 This is a gradle plugin that helps you easily do semantic versioning of java projects using gradle.
 
+## Reason for production
+
+In the team I work with, we do not use Docker and instead deploy the .jar files directly. Because of this, we encountered situations where it became confusing to know which version a specific .jar file was during deployment, especially when the file itself didn't contain version information.
+
+To address this, I decided to create a versioning library for .jar files that would be beneficial for all team members.
+
 ---
 
 # Usage
