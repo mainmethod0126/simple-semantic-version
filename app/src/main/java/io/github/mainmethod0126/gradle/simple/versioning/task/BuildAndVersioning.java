@@ -18,9 +18,11 @@ import org.gradle.api.tasks.Input;
 import org.gradle.api.tasks.TaskAction;
 import org.gradle.api.tasks.bundling.Jar;
 import org.json.JSONObject;
+
+import io.github.mainmethod0126.gradle.simple.versioning.extension.SimpleSemanticVersionPluginExtension;
 import io.github.mainmethod0126.gradle.simple.versioning.task.version.SemanticVersionFile;
-import io.github.mainmethod0126.gradle.simple.versioning.utils.DateUtils;
 import io.github.mainmethod0126.gradle.simple.versioning.utils.NumberUtils;
+import io.github.mainmethod0126.gradle.simple.versioning.utils.SsvPaths;
 
 public class BuildAndVersioning extends DefaultTask {
 
@@ -138,49 +140,47 @@ public class BuildAndVersioning extends DefaultTask {
 
     private void init() throws IOException {
 
+        // set default application version
         Path versionFilePath = Paths.get("version.json");
         semanticVersionFile = new SemanticVersionFile(versionFilePath);
+        SimpleSemanticVersionPluginExtension.getExtension().setApplicationVersion(semanticVersionFile.getFullString());
+
+        // set default java version
+        String sourceCompatibility = this.javav;
+        if (sourceCompatibility.isEmpty()) {
+            sourceCompatibility = System.getProperty("java.version");
+        }
+        project.setProperty("sourceCompatibility", sourceCompatibility);
     }
 
-    private Artifact createArtifact(String sourceCompatibility, String applicationVersion) throws IOException {
+    private Artifact createArtifact() throws IOException {
 
-        if (sourceCompatibility == null) {
-            throw new NullPointerException("sourceCompatibility is null");
-        }
+        String applicationVersion = SimpleSemanticVersionPluginExtension.getExtension().getApplicationVersion();
 
-        if (applicationVersion == null) {
+        if (SimpleSemanticVersionPluginExtension.getExtension().getApplicationVersion() == null) {
             throw new NullPointerException("applicationVersion is null");
         }
 
-        String buildDate = DateUtils.getCurrentDate(DateUtils.DateUnit.DAY);
-
-        Path buildDirPath = createBuildDirPath(project.getProjectDir()
-                .toString(), buildDate, sourceCompatibility,
-                applicationVersion);
+        Path buildDirPath = SsvPaths.getBuildDir();
 
         project.setProperty("version", applicationVersion);
 
-        createBuildDir(buildDirPath);
+        mkdir(buildDirPath);
 
-        setJar(buildDirPath.toAbsolutePath().toString(), applicationVersion, buildDate);
+        setJar(buildDirPath.toAbsolutePath().toString(), applicationVersion,
+                SimpleSemanticVersionPluginExtension.getExtension().getBuildDate());
 
         return new Artifact(buildDirPath, applicationVersion);
 
     }
 
-    private void createBuildDir(Path buildDirPath) throws FileNotFoundException {
+    private void mkdir(Path buildDirPath) throws FileNotFoundException {
 
         File buildDir = new File(buildDirPath.toAbsolutePath().toString());
 
         if (!buildDir.exists() && !buildDir.mkdirs()) {
-            throw new FileNotFoundException(buildDirPath + " Failed Create Build Directory");
+            throw new FileNotFoundException(buildDirPath + " Failed Create Directory");
         }
-    }
-
-    private Path createBuildDirPath(String rootPath, String buildDate, String sourceCompatibility,
-            String applicationVersion) {
-
-        return Paths.get(rootPath, "dist", buildDate, sourceCompatibility, applicationVersion);
     }
 
     private void setJar(String buildDirPath, String applicationVersion, String buildDate) {
@@ -197,22 +197,10 @@ public class BuildAndVersioning extends DefaultTask {
 
         init();
 
-        String sourceCompatibility = this.javav;
-
-        // set default java version
-        if (sourceCompatibility.isEmpty()) {
-
-            sourceCompatibility = System.getProperty("java.version");
-        }
-
-        project.setProperty("sourceCompatibility", sourceCompatibility);
-
         TaskParam userInputVersion = new TaskParam(this.javav, this.major, this.minor, this.patch, this.pr, this.bm);
         taskParamResolve(userInputVersion);
 
-        String applicationVersion = semanticVersionFile.getFullString();
-
-        Artifact artifact = createArtifact(sourceCompatibility, applicationVersion);
+        Artifact artifact = createArtifact();
 
         System.out.println(
                 "----------------------------------------------------------------------------------------------------");
@@ -324,6 +312,7 @@ public class BuildAndVersioning extends DefaultTask {
         return nextVersion;
     }
 
+    @Override
     public Project getProject() {
         return project;
     }

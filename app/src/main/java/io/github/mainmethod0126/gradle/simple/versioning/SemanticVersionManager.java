@@ -9,12 +9,21 @@ import org.gradle.api.Project;
 import org.gradle.api.initialization.Settings;
 import org.gradle.api.invocation.Gradle;
 
+import io.github.mainmethod0126.gradle.simple.versioning.extension.SimpleSemanticVersionPluginExtension;
 import io.github.mainmethod0126.gradle.simple.versioning.task.BuildAndVersioning;
+import io.github.mainmethod0126.gradle.simple.versioning.utils.SsvPaths;
 
 public class SemanticVersionManager implements Plugin<Project> {
 
+        private Project project;
+
         @Override
         public void apply(Project project) {
+
+                this.project = project;
+
+                initExtensions();
+                initUtils();
 
                 BuildAndVersioning buildAndVersioning = project.getTasks().create("BuildAndVersioning",
                                 BuildAndVersioning.class);
@@ -76,6 +85,14 @@ public class SemanticVersionManager implements Plugin<Project> {
 
                 });
 
+        }
+
+        private void initExtensions() {
+                SimpleSemanticVersionPluginExtension.init(this.project);
+        }
+
+        private void initUtils() {
+                SsvPaths.init(this.project);
         }
 
 }
