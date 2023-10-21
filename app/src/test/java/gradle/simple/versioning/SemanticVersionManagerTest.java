@@ -10,19 +10,25 @@ import org.gradle.api.Project;
 import org.gradle.testfixtures.ProjectBuilder;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import io.github.mainmethod0126.gradle.simple.versioning.task.BuildAndVersioning;
 
-public class SemanticVersionManagerTest {
+import io.github.mainmethod0126.gradle.simple.versioning.extension.SimpleSemanticVersionPluginExtension;
+import io.github.mainmethod0126.gradle.simple.versioning.task.BuildAndVersioning;
+import io.github.mainmethod0126.gradle.simple.versioning.utils.SsvPaths;
+
+class SemanticVersionManagerTest {
 
     @Test
     @DisplayName("buildAndVersioningTask 가 정상적으로 실행되는지 테스트 합니다.")
-    public void buildAndVersioningTaskTest() throws IOException {
+    void buildAndVersioningTaskTest() throws IOException {
 
         // given
         Project project = ProjectBuilder.builder().build();
         project.getPlugins().apply("java");
         BuildAndVersioning buildAndVersioning = project.getTasks().create("BuildAndVersioning",
                 BuildAndVersioning.class);
+
+        SimpleSemanticVersionPluginExtension.init(project);
+        SsvPaths.init(project);
 
         // when, then
         buildAndVersioning.setProject(project);
@@ -31,7 +37,7 @@ public class SemanticVersionManagerTest {
 
     @Test
     @DisplayName("If the build succeeds, the incremented version is committed.")
-    public void buildAndVersioningTask_whenBuildSucceed_thenIncreaseCommitTest() throws IOException {
+    void buildAndVersioningTask_whenBuildSucceed_thenIncreaseCommitTest() throws IOException {
 
         // given
         Project project = ProjectBuilder.builder().build();
@@ -39,13 +45,17 @@ public class SemanticVersionManagerTest {
         BuildAndVersioning buildAndVersioning = project.getTasks().create("BuildAndVersioning",
                 BuildAndVersioning.class);
 
+        SimpleSemanticVersionPluginExtension.init(project);
+        SsvPaths.init(project);
+
         buildAndVersioning.setMajor("++");
         buildAndVersioning.setMinor("++");
         buildAndVersioning.setPatch("++");
         buildAndVersioning.setPr("beta" + UUID.randomUUID().toString());
         buildAndVersioning.setBm("test" + UUID.randomUUID().toString());
+        buildAndVersioning.setJavav("11");
 
-        // when 
+        // when
         buildAndVersioning.setProject(project);
         buildAndVersioning.doExcute();
         buildAndVersioning.commit();
@@ -55,7 +65,7 @@ public class SemanticVersionManagerTest {
 
     @Test
     @DisplayName("If the build fails, the incremented version is not committed.")
-    public void buildAndVersioningTask_whenBuildFailed_thenNotIncresaseCommitTest() throws IOException {
+    void buildAndVersioningTask_whenBuildFailed_thenNotIncresaseCommitTest() throws IOException {
 
         // given
         Project project = ProjectBuilder.builder().build();
@@ -63,11 +73,16 @@ public class SemanticVersionManagerTest {
         BuildAndVersioning buildAndVersioning = project.getTasks().create("BuildAndVersioning",
                 BuildAndVersioning.class);
 
+        SimpleSemanticVersionPluginExtension.init(project);
+        SimpleSemanticVersionPluginExtension.getExtension().setDateInBuildPath(false);
+        SsvPaths.init(project);
+
         buildAndVersioning.setMajor("++");
         buildAndVersioning.setMinor("++");
         buildAndVersioning.setPatch("++");
         buildAndVersioning.setPr("beta" + UUID.randomUUID().toString());
         buildAndVersioning.setBm("test" + UUID.randomUUID().toString());
+        buildAndVersioning.setJavav("11");
 
         // when
         buildAndVersioning.setProject(project);

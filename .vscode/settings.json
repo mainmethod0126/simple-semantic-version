@@ -1,5 +1,21 @@
 {
-    "java.configuration.updateBuildConfiguration": "automatic",
-    "java.compile.nullAnalysis.mode": "automatic",
-    "java.dependency.syncWithFolderExplorer": true
+  "java.configuration.updateBuildConfiguration": "automatic",
+  "java.compile.nullAnalysis.mode": "automatic",
+  "java.dependency.syncWithFolderExplorer": true,
+  "java.jdt.ls.java.home": "C:\\Program Files\\Zulu\\zulu-11",
+  "java.configuration.runtimes": [
+    {
+      "name": "JavaSE-1.8",
+      "path": "C:\\Program Files\\Zulu\\zulu-8"
+    },
+    {
+      "name": "JavaSE-11",
+      "path": "C:\\Program Files\\Zulu\\zulu-11",
+      "default": true
+    },
+    {
+      "name": "JavaSE-17",
+      "path": "C:\\Program Files\\Zulu\\zulu-17"
+    }
+  ]
 }
