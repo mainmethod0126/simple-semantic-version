@@ -22,7 +22,9 @@ public class SemanticVersionManager implements Plugin<Project> {
 
                 this.project = project;
 
-                initExtensions();
+                project.getExtensions().create("ssv",
+                                SimpleSemanticVersionPluginExtension.class);
+
                 initUtils();
 
                 BuildAndVersioning buildAndVersioning = project.getTasks().create("BuildAndVersioning",
@@ -49,11 +51,14 @@ public class SemanticVersionManager implements Plugin<Project> {
                 buildAndVersioning.setBm(bm);
 
                 buildAndVersioning.setProject(project);
-                try {
-                        buildAndVersioning.doExcute();
-                } catch (IOException e) {
-                        throw new IllegalStateException(e);
-                }
+
+                project.afterEvaluate(pj -> {
+                        try {
+                                buildAndVersioning.doExcute();
+                        } catch (IOException e) {
+                                throw new IllegalStateException(e);
+                        }
+                });
 
                 project.getGradle().addBuildListener(new BuildListener() {
 
@@ -85,10 +90,6 @@ public class SemanticVersionManager implements Plugin<Project> {
 
                 });
 
-        }
-
-        private void initExtensions() {
-                SimpleSemanticVersionPluginExtension.init(this.project);
         }
 
         private void initUtils() {

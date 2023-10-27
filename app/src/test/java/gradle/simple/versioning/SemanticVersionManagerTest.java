@@ -27,7 +27,8 @@ class SemanticVersionManagerTest {
         BuildAndVersioning buildAndVersioning = project.getTasks().create("BuildAndVersioning",
                 BuildAndVersioning.class);
 
-        SimpleSemanticVersionPluginExtension.init(project);
+        project.getExtensions().create("ssv",
+                SimpleSemanticVersionPluginExtension.class);
         SsvPaths.init(project);
 
         // when, then
@@ -45,7 +46,8 @@ class SemanticVersionManagerTest {
         BuildAndVersioning buildAndVersioning = project.getTasks().create("BuildAndVersioning",
                 BuildAndVersioning.class);
 
-        SimpleSemanticVersionPluginExtension.init(project);
+        project.getExtensions().create("ssv",
+                SimpleSemanticVersionPluginExtension.class);
         SsvPaths.init(project);
 
         buildAndVersioning.setMajor("++");
@@ -73,8 +75,9 @@ class SemanticVersionManagerTest {
         BuildAndVersioning buildAndVersioning = project.getTasks().create("BuildAndVersioning",
                 BuildAndVersioning.class);
 
-        SimpleSemanticVersionPluginExtension.init(project);
-        SimpleSemanticVersionPluginExtension.getExtension().setDateInBuildPath(false);
+        SimpleSemanticVersionPluginExtension extension = project.getExtensions().create("ssv",
+                SimpleSemanticVersionPluginExtension.class);
+        extension.getIsDateInBuildArtifactDirPath().set(false);
         SsvPaths.init(project);
 
         buildAndVersioning.setMajor("++");
