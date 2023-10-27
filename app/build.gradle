@@ -6,14 +6,14 @@
  * User Manual available at https://docs.gradle.org/7.3/userguide/building_java_projects.html
  */
 
-buildscript {
-    repositories {
-        jcenter()
-    }
-    dependencies {
-        classpath "gradle.plugin.com.github.johnrengelman:shadow:7.1.2"
-    }
-}
+// buildscript {
+//     repositories {
+//         jcenter()
+//     }
+//     dependencies {
+//         classpath "gradle.plugin.com.github.johnrengelman:shadow:7.1.2"
+//     }
+// }
 
 plugins {
     // Apply the application plugin to add support for building a CLI application in Java.
@@ -27,18 +27,17 @@ plugins {
 
 
 
-apply plugin: 'com.github.johnrengelman.shadow'
+// apply plugin: 'com.github.johnrengelman.shadow'
 
 
 group = 'io.github.mainmethod0126'
-version = "0.1.2"
+version = "0.1.4"
 sourceCompatibility = 11
 targetCompatibility = 11
 
 tasks.withType(Javadoc) {
     options.encoding = 'UTF-8'
 }
-
 
 compileJava {
     options.encoding = 'UTF-8'

@@ -19,14 +19,14 @@ import org.gradle.api.tasks.TaskAction;
 import org.gradle.api.tasks.bundling.Jar;
 import org.json.JSONObject;
 
-import io.github.mainmethod0126.gradle.simple.versioning.extension.SimpleSemanticVersionPluginExtension;
 import io.github.mainmethod0126.gradle.simple.versioning.task.version.SemanticVersionFile;
+import io.github.mainmethod0126.gradle.simple.versioning.utils.DateUtils;
+import io.github.mainmethod0126.gradle.simple.versioning.utils.DateUtils.DateUnit;
 import io.github.mainmethod0126.gradle.simple.versioning.utils.NumberUtils;
 import io.github.mainmethod0126.gradle.simple.versioning.utils.SsvPaths;
 
 public class BuildAndVersioning extends DefaultTask {
 
-    @Inject
     private Project project;
 
     @Input
@@ -48,6 +48,30 @@ public class BuildAndVersioning extends DefaultTask {
     private String bm = "";
 
     private SemanticVersionFile semanticVersionFile;
+
+    private String buildDate;
+
+    @Inject
+    public BuildAndVersioning(Project project) {
+
+        // set default application version
+        Path versionFilePath = Paths.get("version.json");
+        try {
+            this.semanticVersionFile = new SemanticVersionFile(versionFilePath);
+        } catch (IOException e) {
+            throw new IllegalArgumentException(e);
+        }
+
+        // set buildDate
+        this.buildDate = DateUtils.getCurrentDate(DateUnit.DAY);
+
+        // set default java version
+        String sourceCompatibility = this.javav;
+        if (sourceCompatibility.isEmpty()) {
+            sourceCompatibility = System.getProperty("java.version");
+        }
+        project.setProperty("sourceCompatibility", sourceCompatibility);
+    }
 
     /**
      * default version 정보가 적혀있는 version.json 파일을 생성합니다.
@@ -138,37 +162,22 @@ public class BuildAndVersioning extends DefaultTask {
         printVersionChangeInfo("buildMetadata", prevBm, nextBm);
     }
 
-    private void init() throws IOException {
-
-        // set default application version
-        Path versionFilePath = Paths.get("version.json");
-        semanticVersionFile = new SemanticVersionFile(versionFilePath);
-        SimpleSemanticVersionPluginExtension.getExtension().setApplicationVersion(semanticVersionFile.getFullString());
-
-        // set default java version
-        String sourceCompatibility = this.javav;
-        if (sourceCompatibility.isEmpty()) {
-            sourceCompatibility = System.getProperty("java.version");
-        }
-        project.setProperty("sourceCompatibility", sourceCompatibility);
-    }
-
     private Artifact createArtifact() throws IOException {
 
-        String applicationVersion = SimpleSemanticVersionPluginExtension.getExtension().getApplicationVersion();
+        String applicationVersion = semanticVersionFile.getFullString();
 
-        if (SimpleSemanticVersionPluginExtension.getExtension().getApplicationVersion() == null) {
+        if (applicationVersion == null) {
             throw new NullPointerException("applicationVersion is null");
         }
 
-        Path buildDirPath = SsvPaths.getBuildDir();
+        Path buildDirPath = SsvPaths.getBuildDir(this.buildDate, applicationVersion);
 
         project.setProperty("version", applicationVersion);
 
         mkdir(buildDirPath);
 
         setJar(buildDirPath.toAbsolutePath().toString(), applicationVersion,
-                SimpleSemanticVersionPluginExtension.getExtension().getBuildDate());
+                this.buildDate);
 
         return new Artifact(buildDirPath, applicationVersion);
 
@@ -194,8 +203,6 @@ public class BuildAndVersioning extends DefaultTask {
 
     @TaskAction
     public void doExcute() throws IOException {
-
-        init();
 
         TaskParam userInputVersion = new TaskParam(this.javav, this.major, this.minor, this.patch, this.pr, this.bm);
         taskParamResolve(userInputVersion);

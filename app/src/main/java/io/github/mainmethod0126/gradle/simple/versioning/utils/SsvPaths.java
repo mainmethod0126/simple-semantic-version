@@ -19,14 +19,22 @@ public class SsvPaths {
         project = pj;
     }
 
-    public static Path getBuildDir() {
-        if (SimpleSemanticVersionPluginExtension.getExtension().isDateInBuildArtifactDirPath()) {
+    public static Path getBuildDir(String buildDate, String applicationVersion) {
+
+        SimpleSemanticVersionPluginExtension extension = (SimpleSemanticVersionPluginExtension) project.getExtensions()
+                .findByName("ssv");
+
+        if (extension == null) {
+            throw new IllegalStateException("Could not find SimpleSemanticVersionPluginExtension");
+        }
+
+        if (extension.getIsDateInBuildArtifactDirPath().getOrElse(false).booleanValue()) {
             return Paths.get(project.getProjectDir().toString(), "dist",
-                    SimpleSemanticVersionPluginExtension.getExtension().getBuildDate(),
-                    SimpleSemanticVersionPluginExtension.getExtension().getApplicationVersion());
+                    buildDate,
+                    applicationVersion);
         } else {
             return Paths.get(project.getProjectDir().toString(), "dist",
-                    SimpleSemanticVersionPluginExtension.getExtension().getApplicationVersion());
+                    applicationVersion);
         }
 
     }
