@@ -27,7 +27,7 @@ jobs:
       shell: bash
       run: |
 
-        echo "$(Pipeline.Workspace)""
+        echo "$(Pipeline.Workspace)"
 
         cd $(Pipeline.Workspace)
 
