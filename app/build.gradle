@@ -6,32 +6,27 @@
  * User Manual available at https://docs.gradle.org/7.3/userguide/building_java_projects.html
  */
 
-// buildscript {
-//     repositories {
-//         jcenter()
-//     }
-//     dependencies {
-//         classpath "gradle.plugin.com.github.johnrengelman:shadow:7.1.2"
-//     }
-// }
+buildscript {
+  repositories {
+    maven {
+      url "https://plugins.gradle.org/m2/"
+    }
+  }
+  dependencies {
+    classpath "io.github.mainmethod0126:app:0.1.4"
+  }
+}
 
 plugins {
     // Apply the application plugin to add support for building a CLI application in Java.
     id 'application'
     id 'com.gradle.plugin-publish' version '1.1.0'
-    id 'com.github.johnrengelman.shadow' version '7.1.2'
     id 'java-gradle-plugin'
 }
 
-
-
-
-
-// apply plugin: 'com.github.johnrengelman.shadow'
-
+apply plugin: "io.github.mainmethod0126.simple-semantic-version"
 
 group = 'io.github.mainmethod0126'
-version = "0.1.4"
 sourceCompatibility = 11
 targetCompatibility = 11
 
@@ -67,11 +62,10 @@ repositories {
 }
 
 
-shadowJar {
-    baseName = "gradle-semantic-versioning-manager-plugin"
-    version = version
-    classifier = null
+jar {
+    archiveBaseName = "gradle-semantic-versioning-manager-plugin"
 }
+
 
 tasks.withType(Test).configureEach {
     it.jvmArgs = ["--add-opens=java.base/java.lang=ALL-UNNAMED"]
