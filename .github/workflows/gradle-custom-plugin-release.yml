@@ -31,7 +31,7 @@ jobs:
 
         cd ${{ github.workspace }}
 
-        echo "$(pwd)"
+        ls
 
         # I have determined that there is no need to include metadata in the tagging information
         temp_major=`node -p "const p = require('${{ github.workspace }}/version.json'); p.major;"`
