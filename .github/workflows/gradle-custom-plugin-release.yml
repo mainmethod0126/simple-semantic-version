@@ -27,6 +27,8 @@ jobs:
       shell: bash
       run: |
 
+        echo $(Pipeline.Workspace)
+
         cd $(Pipeline.Workspace)
 
         echo "$(pwd)"
