@@ -10,7 +10,7 @@ name: Gradle Package
 on:
   push:
     branches:
-      - action-test
+      - gtihub-action-gradle-custom-plugin-release
 
 jobs:
   build:
