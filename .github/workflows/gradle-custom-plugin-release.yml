@@ -41,6 +41,19 @@ jobs:
         temp_patch=`node -p "const p = require('${{ github.workspace }}/app/version.json'); p.patch;"`
         temp_prereleaseVersion=`node -p "const p = require('${{ github.workspace }}/app/version.json'); p.prereleaseVersion;"`
 
+        # The task involves adding both '.' and '-' to the string so that dots (.) and dashes (-) can be included when combining all version information.
+        if [ "$temp_minor" != "" ]; then
+          temp_minor=".${temp_minor}"
+        fi
+
+        if [ "$temp_patch" != "" ]; then
+          temp_patch=".${temp_patch}"
+        fi
+
+        if [ "$temp_prereleaseVersion" != "" ]; then
+          temp_prereleaseVersion="-${temp_prereleaseVersion}"
+        fi
+
         echo "temp_major : $temp_major"
         echo "temp_minor : $temp_minor"
         echo "temp_patch : $temp_patch"
