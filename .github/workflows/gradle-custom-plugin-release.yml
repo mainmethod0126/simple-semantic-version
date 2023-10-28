@@ -26,7 +26,8 @@ jobs:
     - name: taging
       shell: bash
       run: |
-        cp $(Pipeline.Workspace)
+
+        echo "$(pwd)"
 
         # I have determined that there is no need to include metadata in the tagging information
         temp_major=`node -p "const p = require('$(Pipeline.Workspace)/temp/version.json'); p.major;"`
