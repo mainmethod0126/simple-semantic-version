@@ -36,10 +36,10 @@ jobs:
         echo "ls $(ls ${{ github.workspace }})"
 
         # I have determined that there is no need to include metadata in the tagging information
-        temp_major=`node -p "const p = require('${{ github.workspace }}/version.json'); p.major;"`
-        temp_minor=`node -p "const p = require('${{ github.workspace }}/version.json'); p.minor;"`
-        temp_patch=`node -p "const p = require('${{ github.workspace }}/version.json'); p.patch;"`
-        temp_prereleaseVersion=`node -p "const p = require('${{ github.workspace }}/version.json'); p.prereleaseVersion;"`
+        temp_major=`node -p "const p = require('${{ github.workspace }}/app/version.json'); p.major;"`
+        temp_minor=`node -p "const p = require('${{ github.workspace }}/app/version.json'); p.minor;"`
+        temp_patch=`node -p "const p = require('${{ github.workspace }}/app/version.json'); p.patch;"`
+        temp_prereleaseVersion=`node -p "const p = require('${{ github.workspace }}/app/version.json'); p.prereleaseVersion;"`
 
         version="$temp_major$temp_minor$temp_patch$temp_prereleaseVersion"
         echo "VERSION = $version"
