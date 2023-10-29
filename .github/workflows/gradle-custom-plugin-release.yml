@@ -97,6 +97,6 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }} 
-        asset_path: "${{ github.workspace }}/app/dist/gradle-semantic-versioning-manager-plugin-${{ steps.read_version.outputs.VERSION }}.jar"
+        asset_path: "${{ github.workspace }}/app/dist/${{ steps.read_version.outputs.VERSION }}/gradle-semantic-versioning-manager-plugin-${{ steps.read_version.outputs.VERSION }}.jar"
         asset_name: gradle-semantic-versioning-manager-plugin-${{ steps.read_version.outputs.VERSION }}.jar
         asset_content_type: application/jar
