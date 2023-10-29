@@ -76,8 +76,6 @@ jobs:
         version="$temp_major$temp_minor$temp_patch$temp_prereleaseVersion"
         echo "VERSION=$version" >> $GITHUB_OUTPUT
 
-        
-        ls "${{ github.workspace }}/app/dist"
 
     - name: create release
       id: create_release
