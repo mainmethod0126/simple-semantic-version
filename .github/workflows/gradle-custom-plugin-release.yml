@@ -74,6 +74,9 @@ jobs:
         echo "temp_prereleaseVersion : $temp_prereleaseVersion"
 
         version="$temp_major$temp_minor$temp_patch$temp_prereleaseVersion"
+
+        echo "temp_prereleaseVersion : $version"
+
         echo "APPLICATION_VERSION=$version" >> $GITHUB_OUTPUT
 
 
