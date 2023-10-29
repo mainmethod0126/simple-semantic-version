@@ -44,17 +44,13 @@ jobs:
       id: read_version
       shell: bash
       run: |
-        echo "${{ github.workspace }}"
-
-        cd ${{ github.workspace }}
-
-        echo "ls $(ls ${{ github.workspace }})"
+        echo "ls $(ls)"
 
         # I have determined that there is no need to include metadata in the tagging information
-        temp_major=`node -p "const p = require('${{ github.workspace }}/app/version.json'); p.major;"`
-        temp_minor=`node -p "const p = require('${{ github.workspace }}/app/version.json'); p.minor;"`
-        temp_patch=`node -p "const p = require('${{ github.workspace }}/app/version.json'); p.patch;"`
-        temp_prereleaseVersion=`node -p "const p = require('${{ github.workspace }}/app/version.json'); p.prereleaseVersion;"`
+        temp_major=`node -p "const p = require('./app/version.json'); p.major;"`
+        temp_minor=`node -p "const p = require('./app/version.json'); p.minor;"`
+        temp_patch=`node -p "const p = require('./app/version.json'); p.patch;"`
+        temp_prereleaseVersion=`node -p "const p = require('./app/version.json'); p.prereleaseVersion;"`
 
         # The task involves adding both '.' and '-' to the string so that dots (.) and dashes (-) can be included when combining all version information.
         if [ "$temp_minor" != "" ]; then
