@@ -10,12 +10,10 @@ name: gradle custom plugin release
 on:
   push:
     branches-ignore:
-      - 'dependabot/**'
       - gtihub-action-gradle-custom-plugin-release
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
     permissions: write-all
 
