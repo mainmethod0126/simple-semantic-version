@@ -8,9 +8,11 @@
 name: gradle custom plugin release
 
 on:
-  push:
+  pull_request:
+    types:
+      - closed
     branches:
-      - gtihub-action-gradle-custom-plugin-release
+      - main
 
 jobs:
   build:
@@ -94,7 +96,7 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps 
+        upload_url: ${{ steps.create_release.outputs.upload_url }} 
         asset_path: "${{ github.workspace }}/app/dist/gradle-semantic-versioning-manager-plugin-${{ steps.read_version.outputs.VERSION }}.jar"
         asset_name: gradle-semantic-versioning-manager-plugin-${{ steps.read_version.outputs.VERSION }}.jar
         asset_content_type: application/jar
