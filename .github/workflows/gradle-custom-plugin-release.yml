@@ -74,7 +74,7 @@ jobs:
         echo "temp_prereleaseVersion : $temp_prereleaseVersion"
 
         version="$temp_major$temp_minor$temp_patch$temp_prereleaseVersion"
-        echo "VERSION=$version" >> $GITHUB_OUTPUT
+        echo "APPLICATION_VERSION=$version" >> $GITHUB_OUTPUT
 
 
     - name: create release
@@ -83,8 +83,8 @@ jobs:
       env: 
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with: 
-        tag_name: ${{ steps.read_version.outputs.VERSION }}
-        release_name: ${{ steps.read_version.outputs.VERSION }}
+        tag_name: ${{ steps.read_version.outputs.APPLICATION_VERSION }}
+        release_name: ${{ steps.read_version.outputs.APPLICATION_VERSION }}
         prerelease: true
 
 
@@ -95,6 +95,6 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }} 
-        asset_path: "${{ github.workspace }}/app/dist/${{ steps.read_version.outputs.VERSION }}/gradle-semantic-versioning-manager-plugin-${{ steps.read_version.outputs.VERSION }}.jar"
-        asset_name: gradle-semantic-versioning-manager-plugin-${{ steps.read_version.outputs.VERSION }}.jar
+        asset_path: "${{ github.workspace }}/app/dist/${{ steps.read_version.outputs.APPLICATION_VERSION }}/gradle-semantic-versioning-manager-plugin-${{ steps.read_version.outputs.APPLICATION_VERSION }}.jar"
+        asset_name: gradle-semantic-versioning-manager-plugin-${{ steps.read_version.outputs.APPLICATION_VERSION }}.jar
         asset_content_type: application/jar
