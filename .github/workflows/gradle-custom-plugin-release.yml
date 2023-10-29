@@ -9,7 +9,7 @@ name: gradle custom plugin release
 
 on:
   push:
-    branches-ignore:
+    branches:
       - gtihub-action-gradle-custom-plugin-release
 
 jobs:
