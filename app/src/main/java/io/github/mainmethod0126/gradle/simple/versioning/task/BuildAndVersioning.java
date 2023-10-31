@@ -27,6 +27,7 @@ import io.github.mainmethod0126.gradle.simple.versioning.utils.SsvPaths;
 
 public class BuildAndVersioning extends DefaultTask {
 
+    @Inject
     private Project project;
 
     @Input
@@ -51,16 +52,11 @@ public class BuildAndVersioning extends DefaultTask {
 
     private String buildDate;
 
-    @Inject
-    public BuildAndVersioning(Project project) {
+    private void init() throws IOException {
 
         // set default application version
         Path versionFilePath = Paths.get("version.json");
-        try {
-            this.semanticVersionFile = new SemanticVersionFile(versionFilePath);
-        } catch (IOException e) {
-            throw new IllegalArgumentException(e);
-        }
+        semanticVersionFile = new SemanticVersionFile(versionFilePath);
 
         // set buildDate
         this.buildDate = DateUtils.getCurrentDate(DateUnit.DAY);
@@ -71,37 +67,6 @@ public class BuildAndVersioning extends DefaultTask {
             sourceCompatibility = System.getProperty("java.version");
         }
         project.setProperty("sourceCompatibility", sourceCompatibility);
-    }
-
-    /**
-     * default version 정보가 적혀있는 version.json 파일을 생성합니다.
-     * 
-     * @return
-     */
-    public File createFileDefaulVersionJson() {
-
-        String defaultPath = "version.json";
-
-        File file = new File(defaultPath);
-
-        JSONObject defaultVersionJson = new JSONObject();
-        defaultVersionJson.put("major", "0");
-        defaultVersionJson.put("minor", "0");
-        defaultVersionJson.put("patch", "1");
-        defaultVersionJson.put("prereleaseVersion", "");
-        defaultVersionJson.put("buildMetadata", "");
-
-        try {
-            FileWriter fileWriter = new FileWriter(file);
-
-            fileWriter.write(defaultVersionJson.toString());
-
-            fileWriter.close();
-        } catch (IOException e) {
-            throw new IllegalStateException("failed create Object" + e.getMessage(), e);
-        }
-
-        return file;
     }
 
     private void printVersionChangeInfo(String versionName, String prev, String next) {
@@ -203,6 +168,8 @@ public class BuildAndVersioning extends DefaultTask {
 
     @TaskAction
     public void doExcute() throws IOException {
+
+        init();
 
         TaskParam userInputVersion = new TaskParam(this.javav, this.major, this.minor, this.patch, this.pr, this.bm);
         taskParamResolve(userInputVersion);

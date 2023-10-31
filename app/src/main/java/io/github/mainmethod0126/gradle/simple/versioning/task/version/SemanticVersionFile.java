@@ -33,8 +33,6 @@ public class SemanticVersionFile {
         if (!this.file.createNewFile()) {
             throw new IOException("failed create file : " + this.file.getPath());
         }
-
-        commit();
     }
 
     private void save(JSONObject version) throws IOException {

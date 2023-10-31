@@ -3,7 +3,9 @@ package gradle.simple.versioning;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.io.File;
 import java.io.IOException;
+import java.nio.file.Paths;
 import java.util.UUID;
 
 import org.gradle.api.Project;
@@ -17,82 +19,101 @@ import io.github.mainmethod0126.gradle.simple.versioning.utils.SsvPaths;
 
 class SemanticVersionManagerTest {
 
-    @Test
-    @DisplayName("buildAndVersioningTask 가 정상적으로 실행되는지 테스트 합니다.")
-    void buildAndVersioningTaskTest() throws IOException {
+        private void deleteVersionJsonFile() {
 
-        // given
-        Project project = ProjectBuilder.builder().build();
-        project.getPlugins().apply("java");
-        BuildAndVersioning buildAndVersioning = project.getTasks().create("BuildAndVersioning",
-                BuildAndVersioning.class);
+                File versionJsonFile = Paths.get("version.json").toFile();
 
-        project.getExtensions().create("ssv",
-                SimpleSemanticVersionPluginExtension.class);
-        SsvPaths.init(project);
+                if (versionJsonFile.exists()) {
+                        versionJsonFile.delete();
+                }
 
-        // when, then
-        buildAndVersioning.setProject(project);
-        buildAndVersioning.doExcute();
-    }
+        }
 
-    @Test
-    @DisplayName("If the build succeeds, the incremented version is committed.")
-    void buildAndVersioningTask_whenBuildSucceed_thenIncreaseCommitTest() throws IOException {
+        @Test
+        @DisplayName("buildAndVersioningTask 가 정상적으로 실행되는지 테스트 합니다.")
+        void buildAndVersioningTaskTest() throws IOException {
 
-        // given
-        Project project = ProjectBuilder.builder().build();
-        project.getPlugins().apply("java");
-        BuildAndVersioning buildAndVersioning = project.getTasks().create("BuildAndVersioning",
-                BuildAndVersioning.class);
+                // given
+                Project project = ProjectBuilder.builder().build();
+                project.getPlugins().apply("java");
+                BuildAndVersioning buildAndVersioning = project.getTasks().create("BuildAndVersioning",
+                                BuildAndVersioning.class);
 
-        project.getExtensions().create("ssv",
-                SimpleSemanticVersionPluginExtension.class);
-        SsvPaths.init(project);
+                project.getExtensions().create("ssv",
+                                SimpleSemanticVersionPluginExtension.class);
+                SsvPaths.init(project);
 
-        buildAndVersioning.setMajor("++");
-        buildAndVersioning.setMinor("++");
-        buildAndVersioning.setPatch("++");
-        buildAndVersioning.setPr("beta" + UUID.randomUUID().toString());
-        buildAndVersioning.setBm("test" + UUID.randomUUID().toString());
-        buildAndVersioning.setJavav("11");
+                // when, then
+                buildAndVersioning.setProject(project);
+                buildAndVersioning.doExcute();
 
-        // when
-        buildAndVersioning.setProject(project);
-        buildAndVersioning.doExcute();
-        buildAndVersioning.commit();
+                buildAndVersioning.commit();
 
-        assertTrue(buildAndVersioning.changed());
-    }
+                deleteVersionJsonFile();
+        }
 
-    @Test
-    @DisplayName("If the build fails, the incremented version is not committed.")
-    void buildAndVersioningTask_whenBuildFailed_thenNotIncresaseCommitTest() throws IOException {
+        @Test
+        @DisplayName("If the build succeeds, the incremented version is committed.")
+        void buildAndVersioningTask_whenBuildSucceed_thenIncreaseCommitTest() throws IOException {
 
-        // given
-        Project project = ProjectBuilder.builder().build();
-        project.getPlugins().apply("java");
-        BuildAndVersioning buildAndVersioning = project.getTasks().create("BuildAndVersioning",
-                BuildAndVersioning.class);
+                // given
+                Project project = ProjectBuilder.builder().build();
+                project.getPlugins().apply("java");
+                BuildAndVersioning buildAndVersioning = project.getTasks().create("BuildAndVersioning",
+                                BuildAndVersioning.class);
 
-        SimpleSemanticVersionPluginExtension extension = project.getExtensions().create("ssv",
-                SimpleSemanticVersionPluginExtension.class);
-        extension.getIsDateInBuildArtifactDirPath().set(false);
-        SsvPaths.init(project);
+                project.getExtensions().create("ssv",
+                                SimpleSemanticVersionPluginExtension.class);
+                SsvPaths.init(project);
 
-        buildAndVersioning.setMajor("++");
-        buildAndVersioning.setMinor("++");
-        buildAndVersioning.setPatch("++");
-        buildAndVersioning.setPr("beta" + UUID.randomUUID().toString());
-        buildAndVersioning.setBm("test" + UUID.randomUUID().toString());
-        buildAndVersioning.setJavav("11");
+                buildAndVersioning.setMajor("++");
+                buildAndVersioning.setMinor("++");
+                buildAndVersioning.setPatch("++");
+                buildAndVersioning.setPr("beta" + UUID.randomUUID().toString());
+                buildAndVersioning.setBm("test" + UUID.randomUUID().toString());
+                buildAndVersioning.setJavav("11");
 
-        // when
-        buildAndVersioning.setProject(project);
-        buildAndVersioning.doExcute();
+                // when
+                buildAndVersioning.setProject(project);
+                buildAndVersioning.doExcute();
+                buildAndVersioning.commit();
 
-        // then
-        assertFalse(buildAndVersioning.changed());
-    }
+                assertTrue(buildAndVersioning.changed());
+
+                deleteVersionJsonFile();
+        }
+
+        @Test
+        @DisplayName("If the build fails, the incremented version is not committed.")
+        void buildAndVersioningTask_whenBuildFailed_thenNotIncresaseCommitTest() throws IOException {
+
+                // given
+                Project project = ProjectBuilder.builder().build();
+                project.getPlugins().apply("java");
+                BuildAndVersioning buildAndVersioning = project.getTasks().create("BuildAndVersioning",
+                                BuildAndVersioning.class);
+
+                SimpleSemanticVersionPluginExtension extension = project.getExtensions().create("ssv",
+                                SimpleSemanticVersionPluginExtension.class);
+                extension.getIsDateInBuildArtifactDirPath().set(false);
+                SsvPaths.init(project);
+
+                buildAndVersioning.setMajor("++");
+                buildAndVersioning.setMinor("++");
+                buildAndVersioning.setPatch("++");
+                buildAndVersioning.setPr("beta" + UUID.randomUUID().toString());
+                buildAndVersioning.setBm("test" + UUID.randomUUID().toString());
+                buildAndVersioning.setJavav("11");
+
+                // when
+                buildAndVersioning.setProject(project);
+                buildAndVersioning.doExcute();
+
+                // then
+                assertFalse(buildAndVersioning.changed());
+
+                deleteVersionJsonFile();
+
+        }
 
 }
